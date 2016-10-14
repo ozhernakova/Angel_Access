@@ -31,27 +31,24 @@
             this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBoxHorizont = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
+            this.comboBoxRegion = new System.Windows.Forms.ComboBox();
+            this.comboBoxBlock = new System.Windows.Forms.ComboBox();
+            this.comboBoxVirabotka = new System.Windows.Forms.ComboBox();
+            this.comboBoxPodetag = new System.Windows.Forms.ComboBox();
             this.comboBox6 = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.пЭЗ_ИDataSet = new Angel_Access.ПЭЗ_ИDataSet();
-            this.участокBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.участокTableAdapter = new Angel_Access.ПЭЗ_ИDataSetTableAdapters.УчастокTableAdapter();
-            this.горизонтBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.горизонтTableAdapter = new Angel_Access.ПЭЗ_ИDataSetTableAdapters.ГоризонтTableAdapter();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.пЭЗ_ИDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.участокBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.горизонтBindingSource)).BeginInit();
+            this.groupBoxRegion = new System.Windows.Forms.GroupBox();
+            this.buttonRegion = new System.Windows.Forms.Button();
+            this.groupBoxVirabotka = new System.Windows.Forms.GroupBox();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.groupBoxRegion.SuspendLayout();
+            this.groupBoxVirabotka.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -67,16 +64,15 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // comboBox1
+            // comboBoxHorizont
             // 
-            this.comboBox1.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.горизонтBindingSource, "Горизонт", true));
-            this.comboBox1.DataBindings.Add(new System.Windows.Forms.Binding("Tag", this.горизонтBindingSource, "id", true));
-            this.comboBox1.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.горизонтBindingSource, "id", true));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(78, 128);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(147, 24);
-            this.comboBox1.TabIndex = 1;
+            this.comboBoxHorizont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxHorizont.FormattingEnabled = true;
+            this.comboBoxHorizont.Location = new System.Drawing.Point(78, 128);
+            this.comboBoxHorizont.MaxDropDownItems = 12;
+            this.comboBoxHorizont.Name = "comboBoxHorizont";
+            this.comboBoxHorizont.Size = new System.Drawing.Size(147, 24);
+            this.comboBoxHorizont.TabIndex = 1;
             // 
             // label2
             // 
@@ -87,43 +83,47 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Участок";
             // 
-            // comboBox2
+            // comboBoxRegion
             // 
-            this.comboBox2.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.участокBindingSource, "Участок", true));
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(78, 62);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(147, 24);
-            this.comboBox2.TabIndex = 3;
+            this.comboBoxRegion.CausesValidation = false;
+            this.comboBoxRegion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxRegion.FormattingEnabled = true;
+            this.comboBoxRegion.Location = new System.Drawing.Point(78, 62);
+            this.comboBoxRegion.Name = "comboBoxRegion";
+            this.comboBoxRegion.Size = new System.Drawing.Size(147, 24);
+            this.comboBoxRegion.TabIndex = 3;
             // 
-            // comboBox3
+            // comboBoxBlock
             // 
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(433, 29);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(121, 24);
-            this.comboBox3.TabIndex = 4;
+            this.comboBoxBlock.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBlock.FormattingEnabled = true;
+            this.comboBoxBlock.Location = new System.Drawing.Point(125, 132);
+            this.comboBoxBlock.Name = "comboBoxBlock";
+            this.comboBoxBlock.Size = new System.Drawing.Size(263, 24);
+            this.comboBoxBlock.TabIndex = 4;
             // 
-            // comboBox4
+            // comboBoxVirabotka
             // 
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Location = new System.Drawing.Point(433, 86);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(121, 24);
-            this.comboBox4.TabIndex = 5;
+            this.comboBoxVirabotka.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxVirabotka.FormattingEnabled = true;
+            this.comboBoxVirabotka.Location = new System.Drawing.Point(125, 66);
+            this.comboBoxVirabotka.Name = "comboBoxVirabotka";
+            this.comboBoxVirabotka.Size = new System.Drawing.Size(263, 24);
+            this.comboBoxVirabotka.TabIndex = 5;
             // 
-            // comboBox5
+            // comboBoxPodetag
             // 
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Location = new System.Drawing.Point(781, 29);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(121, 24);
-            this.comboBox5.TabIndex = 6;
+            this.comboBoxPodetag.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPodetag.FormattingEnabled = true;
+            this.comboBoxPodetag.Location = new System.Drawing.Point(125, 194);
+            this.comboBoxPodetag.Name = "comboBoxPodetag";
+            this.comboBoxPodetag.Size = new System.Drawing.Size(263, 24);
+            this.comboBoxPodetag.TabIndex = 6;
             // 
             // comboBox6
             // 
             this.comboBox6.FormattingEnabled = true;
-            this.comboBox6.Location = new System.Drawing.Point(781, 84);
+            this.comboBox6.Location = new System.Drawing.Point(865, 283);
             this.comboBox6.Name = "comboBox6";
             this.comboBox6.Size = new System.Drawing.Size(121, 24);
             this.comboBox6.TabIndex = 7;
@@ -131,74 +131,86 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(323, 37);
+            this.label3.Location = new System.Drawing.Point(6, 135);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(46, 17);
+            this.label3.Size = new System.Drawing.Size(40, 17);
             this.label3.TabIndex = 8;
-            this.label3.Text = "label3";
+            this.label3.Text = "Блок";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(326, 92);
+            this.label4.Location = new System.Drawing.Point(6, 201);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(46, 17);
+            this.label4.Size = new System.Drawing.Size(65, 17);
             this.label4.TabIndex = 9;
-            this.label4.Text = "label4";
+            this.label4.Text = "Подэтаж";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(671, 37);
+            this.label5.Location = new System.Drawing.Point(6, 69);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(46, 17);
+            this.label5.Size = new System.Drawing.Size(81, 17);
             this.label5.TabIndex = 10;
-            this.label5.Text = "label5";
+            this.label5.Text = "Выработка";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(670, 92);
+            this.label6.Location = new System.Drawing.Point(777, 290);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(46, 17);
             this.label6.TabIndex = 11;
             this.label6.Text = "label6";
             // 
-            // groupBox1
+            // groupBoxRegion
             // 
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.comboBox2);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.comboBox1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 29);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(245, 197);
-            this.groupBox1.TabIndex = 12;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Выбор района";
+            this.groupBoxRegion.Controls.Add(this.buttonRegion);
+            this.groupBoxRegion.Controls.Add(this.label2);
+            this.groupBoxRegion.Controls.Add(this.comboBoxRegion);
+            this.groupBoxRegion.Controls.Add(this.label1);
+            this.groupBoxRegion.Controls.Add(this.comboBoxHorizont);
+            this.groupBoxRegion.Location = new System.Drawing.Point(12, 29);
+            this.groupBoxRegion.Name = "groupBoxRegion";
+            this.groupBoxRegion.Size = new System.Drawing.Size(245, 278);
+            this.groupBoxRegion.TabIndex = 12;
+            this.groupBoxRegion.TabStop = false;
+            this.groupBoxRegion.Text = "Выбор района";
             // 
-            // пЭЗ_ИDataSet
+            // buttonRegion
             // 
-            this.пЭЗ_ИDataSet.DataSetName = "ПЭЗ_ИDataSet";
-            this.пЭЗ_ИDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            this.buttonRegion.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.buttonRegion.Location = new System.Drawing.Point(9, 201);
+            this.buttonRegion.Name = "buttonRegion";
+            this.buttonRegion.Size = new System.Drawing.Size(216, 44);
+            this.buttonRegion.TabIndex = 4;
+            this.buttonRegion.Text = "Показать выработки для этого района";
+            this.buttonRegion.UseVisualStyleBackColor = false;
+            this.buttonRegion.Click += new System.EventHandler(this.buttonRegion_Click);
             // 
-            // участокBindingSource
+            // groupBoxVirabotka
             // 
-            this.участокBindingSource.DataMember = "Участок";
-            this.участокBindingSource.DataSource = this.пЭЗ_ИDataSet;
+            this.groupBoxVirabotka.Controls.Add(this.label3);
+            this.groupBoxVirabotka.Controls.Add(this.label4);
+            this.groupBoxVirabotka.Controls.Add(this.label5);
+            this.groupBoxVirabotka.Controls.Add(this.comboBoxPodetag);
+            this.groupBoxVirabotka.Controls.Add(this.comboBoxBlock);
+            this.groupBoxVirabotka.Controls.Add(this.comboBoxVirabotka);
+            this.groupBoxVirabotka.Location = new System.Drawing.Point(300, 29);
+            this.groupBoxVirabotka.Name = "groupBoxVirabotka";
+            this.groupBoxVirabotka.Size = new System.Drawing.Size(407, 278);
+            this.groupBoxVirabotka.TabIndex = 13;
+            this.groupBoxVirabotka.TabStop = false;
+            this.groupBoxVirabotka.Text = "Место измерения";
+            this.groupBoxVirabotka.Visible = false;
             // 
-            // участокTableAdapter
+            // treeView1
             // 
-            this.участокTableAdapter.ClearBeforeFill = true;
-            // 
-            // горизонтBindingSource
-            // 
-            this.горизонтBindingSource.DataMember = "Горизонт";
-            this.горизонтBindingSource.DataSource = this.пЭЗ_ИDataSet;
-            // 
-            // горизонтTableAdapter
-            // 
-            this.горизонтTableAdapter.ClearBeforeFill = true;
+            this.treeView1.Location = new System.Drawing.Point(745, 42);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(121, 157);
+            this.treeView1.TabIndex = 14;
             // 
             // Form1
             // 
@@ -206,23 +218,18 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(1022, 419);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.treeView1);
+            this.Controls.Add(this.groupBoxVirabotka);
+            this.Controls.Add(this.groupBoxRegion);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.comboBox6);
-            this.Controls.Add(this.comboBox5);
-            this.Controls.Add(this.comboBox4);
-            this.Controls.Add(this.comboBox3);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.пЭЗ_ИDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.участокBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.горизонтBindingSource)).EndInit();
+            this.groupBoxRegion.ResumeLayout(false);
+            this.groupBoxRegion.PerformLayout();
+            this.groupBoxVirabotka.ResumeLayout(false);
+            this.groupBoxVirabotka.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -232,23 +239,22 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBoxHorizont;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.ComboBox comboBox3;
-        private System.Windows.Forms.ComboBox comboBox4;
-        private System.Windows.Forms.ComboBox comboBox5;
+        private System.Windows.Forms.ComboBox comboBoxRegion;
+        private System.Windows.Forms.ComboBox comboBoxBlock;
+        private System.Windows.Forms.ComboBox comboBoxVirabotka;
+        private System.Windows.Forms.ComboBox comboBoxPodetag;
         private System.Windows.Forms.ComboBox comboBox6;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private ПЭЗ_ИDataSet пЭЗ_ИDataSet;
-        private System.Windows.Forms.BindingSource участокBindingSource;
-        private ПЭЗ_ИDataSetTableAdapters.УчастокTableAdapter участокTableAdapter;
-        private System.Windows.Forms.BindingSource горизонтBindingSource;
-        private ПЭЗ_ИDataSetTableAdapters.ГоризонтTableAdapter горизонтTableAdapter;
+        private System.Windows.Forms.GroupBox groupBoxRegion;
+        private System.Windows.Forms.Button buttonRegion;
+        private System.Windows.Forms.GroupBox groupBoxVirabotka;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.TreeView treeView1;
     }
 }
 
