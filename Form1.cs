@@ -15,6 +15,7 @@ namespace Angel_Access
     public partial class Form1 : Form
     {
         accessConnect aC;
+        AngelDataList aDL;
         public Form1()
         {
             InitializeComponent();
@@ -23,6 +24,7 @@ namespace Angel_Access
         private void Form1_Load(object sender, EventArgs e)
         {
             aC = new accessConnect();
+            aDL = new AngelDataList();
           
 
             // TODO: проверить связь с базой акцесса. Если нет - предложить выбрать путь к ней.
@@ -36,6 +38,8 @@ namespace Angel_Access
             comboBoxRegion.DataSource = aC.dtd.regions;
             comboBoxRegion.DisplayMember = "Участок";
 
+            dateTimePicker1.Value = DateTime.Today;
+
         }
 
         private void buttonRegion_Click(object sender, EventArgs e)
@@ -44,22 +48,25 @@ namespace Angel_Access
             string tmp2 = comboBoxRegion.SelectedIndex.ToString();
 
             int lineNumber = aC.virabotka(tmp1, tmp2);
-
+            NumberOfVirabot.Text = "Найдено выработок: " + lineNumber + " Добавить новую выработку в базу можно только через Access, программу ПЭЗ_И.accdb";
             if (lineNumber > 0)
             {
-                this.comboBoxVirabotka.SelectedIndexChanged += new System.EventHandler(this.comboBoxVirabotka_SelectedIndexChanged);
 
                 comboBoxVirabotka.DataSource = aC.dtd.virabotki;
                 comboBoxVirabotka.DisplayMember = "Выработка";
+                groupBoxVirabotka.Visible = true;
                 fillComboBox();
 
- 
+                //MessageBox.Show("выбрана выработка1" + comboBoxVirabotka.Text);
+
+                this.comboBoxVirabotka.SelectedIndexChanged += new System.EventHandler(this.comboBoxVirabotka_SelectedIndexChanged);
+
                 //comboBoxBlock.DataSource = aC.dtd.virabotki;
                 //comboBoxBlock.DisplayMember = "Блок";
 
                 //comboBoxPodetag.DataSource = aC.dtd.virabotki;
                 //comboBoxPodetag.DisplayMember = "Подэтаж";
-                groupBoxVirabotka.Visible = true;
+                
  
 
 
@@ -78,6 +85,8 @@ namespace Angel_Access
         void fillComboBox() 
         {
             // Выборка запросом - см https://msdn.microsoft.com/ru-ru/library/bb669073(v=vs.110).aspx
+            // про dataview http://www.c-sharpcorner.com/article/dataview-in-C-Sharp/
+            // и http://csharp.net-informations.com/dataview/create-dataview.htm
             EnumerableRowCollection<DataRow> query = from order in aC.dtd.virabotki.AsEnumerable()
                                                      where order.Field<String>("Выработка") == comboBoxVirabotka.Text
                                                      select order;
@@ -94,8 +103,56 @@ namespace Angel_Access
 
         private void comboBoxVirabotka_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MessageBox.Show("выбрана выработка" + comboBoxVirabotka.Text);
+          //  MessageBox.Show("выбрана выработка2" + comboBoxVirabotka.Text);
             fillComboBox();
+
+        }
+
+        private void comboBoxPodetag_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonUploadData_Click(object sender, EventArgs e)
+        {
+            // загрузить файл с данными
+            StreamReader file = null;
+            openFileDialog1.InitialDirectory = "h:\\OLYA\\mulev\angel";
+            openFileDialog1.Filter = "txt  (*.txt)|*.txt|Все файлы (*.*)|*.*";
+            openFileDialog1.FilterIndex = 1;
+            openFileDialog1.RestoreDirectory = true;
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+
+                try
+                {
+                    if (( openFileDialog1.OpenFile()) != null)
+                    {
+                        labelUploaded.Text = "Загружен файл с измерениями "+ openFileDialog1.FileName;
+                        dataGridViewAllAngel.DataSource = null;
+                        file = new StreamReader(openFileDialog1.FileName);
+                        int counter = 0;
+                        string line;
+                        while ((line = file.ReadLine()) != null)
+                        {
+                            System.Console.WriteLine(line);
+                            aDL.addAngelData(line);
+                            counter++;
+                        }
+                    }
+                    dataGridViewAllAngel.DataSource = aDL.adl;
+                    dataGridViewAllAngel.Update();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
+            
+            }
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
 
         }
     }
