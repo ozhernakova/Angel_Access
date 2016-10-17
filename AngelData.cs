@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Angel_Access
 {
@@ -33,19 +34,89 @@ namespace Angel_Access
         
     }
 
-    class Zamer 
+    public class Zamer 
     {
         public string Virabotka { get; set; }
         public string Priviazka { get; set; }
         public DateTime dt { get; set; }
+        public int Line { get; set; }
+        public int Picket { get; set; }
+
     
     }
+
+    public class ZamerData 
+    {
+        public List<AngelData> odinZamer = new List<AngelData>();
+        public Zamer zamer = new Zamer();
+   
+    }
+
 
     
 
     class AngelDataList 
     {
         public List <AngelData> adl = new List<AngelData>();
+        List<ZamerData> zd = new List<ZamerData>();
+        public List <ListViewItem> lvi_list = new List<ListViewItem>();
+
+        public int zameri() 
+        {
+            int i = 0;
+            int num = adl.Count();
+            if (num == 0 || num == null) return 0;
+
+            ZamerData zdnew = new ZamerData();
+            ListViewItem lvi = new ListViewItem();
+            zd.Add(zdnew);
+            int Picket = adl[0].Picket;
+            
+            zd[0].odinZamer.Add(adl[0]);
+            zd[0].zamer.Line = adl[0].Line;
+            zd[0].zamer.Picket = adl[0].Picket;
+
+            lvi = new ListViewItem();  // new string[] { "1", "AJ", "22" } тоже работает.
+         //   lvi.ImageIndex = 0; // установка картинки для файла
+            lvi.Text = "Замер 1"; // замеры считаем не с 0 а с 1 
+            lvi.SubItems.AddRange(new string[] { adl[0].Line.ToString(), (zd[0].zamer.Picket.ToString()) });
+                      
+            lvi_list.Add(lvi);
+
+                for ( int j = 1; j < num ; j++)
+                {
+                    if (adl[j].Picket != adl[j - 1].Picket || adl[j].Line != adl[j-1].Line)
+                    {
+                        
+                        
+                        i += 1;
+                        zdnew = new ZamerData();
+                        zd.Add(zdnew);
+                        zd[i].zamer.Line = adl[j].Line;
+                        zd[i].zamer.Picket = adl[j].Picket;
+
+                        lvi = new ListViewItem();
+               //         lvi.ImageIndex = 0; // установка номера картинки для lvi
+
+                        lvi.Text = "Замер " + (i + 1).ToString();
+                        lvi.SubItems.AddRange(new string[] {  adl[j].Line.ToString(), zd[i].zamer.Picket.ToString() });
+                // добавляем элемент в ListView
+                        lvi_list.Add (lvi);
+
+
+                    }
+                        
+
+                    zd[i].odinZamer.Add(adl[j]); 
+                    
+                    
+                }
+                return i+1;  // число штук, а не номер последнего
+          
+               
+           
+        
+        }
 
         public void addAngelData(string line) {
         // проверяем что там цифры
@@ -76,11 +147,9 @@ namespace Angel_Access
             ad.L9 = angelString[15];
             ad.L10 = angelString[16];
             adl.Add(ad);
-        
-        }
-            
-
-        
+  
+            }
+      
         }
     
     }

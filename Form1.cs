@@ -40,6 +40,8 @@ namespace Angel_Access
 
             dateTimePicker1.Value = DateTime.Today;
 
+    
+
         }
 
         private void buttonRegion_Click(object sender, EventArgs e)
@@ -129,7 +131,13 @@ namespace Angel_Access
                     if (( openFileDialog1.OpenFile()) != null)
                     {
                         labelUploaded.Text = "Загружен файл с измерениями "+ openFileDialog1.FileName;
+                        labelDataGridInfo.Text = "";
+                        // зачистили контролы
                         dataGridViewAllAngel.DataSource = null;
+                        listViewZameri.Clear();
+                        aDL = new AngelDataList();
+                       
+
                         file = new StreamReader(openFileDialog1.FileName);
                         int counter = 0;
                         string line;
@@ -139,13 +147,25 @@ namespace Angel_Access
                             aDL.addAngelData(line);
                             counter++;
                         }
+                        int i = aDL.zameri();
+                        labelUploaded.Text = labelUploaded.Text + " Выделено " + i + " отдельных замеров";
+
                     }
+
+                    labelDataGridInfo.Text = "Считанный файл в табличной форме";
                     dataGridViewAllAngel.DataSource = aDL.adl;
                     dataGridViewAllAngel.Update();
+                                    
+                    // добавляем элемент в ListView
+                    listViewZameri.Items.AddRange(aDL.lvi_list.ToArray());
+                    // Create some column headers for the data. 
+                    listViewZameriHeader();
+            
+                    
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                    MessageBox.Show("Ошибка при чтении файла данных. Текст ошибки: " + ex.Message);
                 }
             
             }
@@ -154,6 +174,45 @@ namespace Angel_Access
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void listViewZameri_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Какие замеры мы выбрали?
+            ListView.SelectedListViewItemCollection choice = listViewZameri.SelectedItems;
+            label8.Text = "";
+            foreach ( ListViewItem item in choice )
+	        {
+		            label8.Text += item.SubItems[0].Text+" " ;
+	        }
+
+           
+
+        }
+
+        void listViewZameriHeader()
+        {
+            ColumnHeader columnheader = new ColumnHeader();
+            columnheader.Text = "Замер ";
+            this.listViewZameri.Columns.Add(columnheader);
+
+            columnheader = new ColumnHeader();
+            columnheader.Text = "Линия ";
+            this.listViewZameri.Columns.Add(columnheader);
+
+            columnheader = new ColumnHeader();
+            columnheader.Text = "Пикет ";
+            this.listViewZameri.Columns.Add(columnheader);
+
+            // Loop through and size each column header to fit the column header text.
+            foreach (ColumnHeader ch in this.listViewZameri.Columns)
+            {
+                ch.Width = -2;
+            }
+
+            this.listViewZameri.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            
+        
         }
     }
 }
