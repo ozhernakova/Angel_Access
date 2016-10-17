@@ -9,8 +9,7 @@ namespace Angel_Access
 {
     public struct AngelData
     {
-        // 18 полей
-
+        // 19 полей
         public int Line { get; set; }
         public int Picket { get; set; }
         public int Comp { get; set; }
@@ -31,7 +30,10 @@ namespace Angel_Access
         public string L9 { get; set; }
         public string L10 { get; set; }
 
-        
+        public string [] alldata 
+        {
+            get { return new String[] { Line.ToString(), Picket.ToString(), Comp.ToString(), t.ToString(),A, Lmin, Lmax, VarA, B}; }
+        }
     }
 
     public class Zamer 
@@ -41,25 +43,35 @@ namespace Angel_Access
         public DateTime dt { get; set; }
         public int Line { get; set; }
         public int Picket { get; set; }
-
-    
     }
 
     public class ZamerData 
     {
         public List<AngelData> odinZamer = new List<AngelData>();
         public Zamer zamer = new Zamer();
-   
     }
-
-
-    
+  
 
     class AngelDataList 
     {
-        public List <AngelData> adl = new List<AngelData>();
+        List <AngelData> adl = new List<AngelData>();
         List<ZamerData> zd = new List<ZamerData>();
         public List <ListViewItem> lvi_list = new List<ListViewItem>();
+
+        public List<AngelData> getchoosenZameri(int[] items) 
+        {
+            List<AngelData> res = new List<AngelData>();
+
+            foreach (int item in items)
+            {
+                foreach (AngelData tmp in zd[item].odinZamer ) 
+                {
+                    res.Add(tmp);
+                }
+            }                   
+
+            return res;
+        } 
 
         public int zameri() 
         {

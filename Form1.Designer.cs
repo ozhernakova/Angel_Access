@@ -45,27 +45,25 @@
             this.buttonRegion = new System.Windows.Forms.Button();
             this.groupBoxVirabotka = new System.Windows.Forms.GroupBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.treeView1 = new System.Windows.Forms.TreeView();
             this.groupBoxFromFile = new System.Windows.Forms.GroupBox();
             this.listViewZameri = new System.Windows.Forms.ListView();
             this.buttonUploadData = new System.Windows.Forms.Button();
             this.labelUploaded = new System.Windows.Forms.Label();
-            this.dataGridViewAllAngel = new System.Windows.Forms.DataGridView();
             this.label6 = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.groupBoxZamer = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label8 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.dataGridViewZamer = new System.Windows.Forms.DataGridView();
+            this.labelZamer = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.labelDataGridInfo = new System.Windows.Forms.Label();
+            this.labelChoosedPlace = new System.Windows.Forms.Label();
             this.groupBoxRegion.SuspendLayout();
             this.groupBoxVirabotka.SuspendLayout();
             this.groupBoxFromFile.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAllAngel)).BeginInit();
             this.groupBoxZamer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewZamer)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -88,7 +86,7 @@
             this.comboBoxHorizont.Location = new System.Drawing.Point(78, 128);
             this.comboBoxHorizont.MaxDropDownItems = 12;
             this.comboBoxHorizont.Name = "comboBoxHorizont";
-            this.comboBoxHorizont.Size = new System.Drawing.Size(147, 24);
+            this.comboBoxHorizont.Size = new System.Drawing.Size(179, 24);
             this.comboBoxHorizont.TabIndex = 1;
             // 
             // label2
@@ -107,7 +105,7 @@
             this.comboBoxRegion.FormattingEnabled = true;
             this.comboBoxRegion.Location = new System.Drawing.Point(78, 62);
             this.comboBoxRegion.Name = "comboBoxRegion";
-            this.comboBoxRegion.Size = new System.Drawing.Size(147, 24);
+            this.comboBoxRegion.Size = new System.Drawing.Size(179, 24);
             this.comboBoxRegion.TabIndex = 3;
             // 
             // comboBoxBlock
@@ -118,6 +116,7 @@
             this.comboBoxBlock.Name = "comboBoxBlock";
             this.comboBoxBlock.Size = new System.Drawing.Size(296, 24);
             this.comboBoxBlock.TabIndex = 4;
+            this.comboBoxBlock.SelectedIndexChanged += new System.EventHandler(this.comboBoxBlock_SelectedIndexChanged);
             // 
             // comboBoxVirabotka
             // 
@@ -184,7 +183,7 @@
             this.groupBoxRegion.Controls.Add(this.comboBoxHorizont);
             this.groupBoxRegion.Location = new System.Drawing.Point(88, 29);
             this.groupBoxRegion.Name = "groupBoxRegion";
-            this.groupBoxRegion.Size = new System.Drawing.Size(245, 291);
+            this.groupBoxRegion.Size = new System.Drawing.Size(280, 290);
             this.groupBoxRegion.TabIndex = 12;
             this.groupBoxRegion.TabStop = false;
             this.groupBoxRegion.Text = "Выбор района";
@@ -194,7 +193,7 @@
             this.buttonRegion.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.buttonRegion.Location = new System.Drawing.Point(9, 213);
             this.buttonRegion.Name = "buttonRegion";
-            this.buttonRegion.Size = new System.Drawing.Size(216, 44);
+            this.buttonRegion.Size = new System.Drawing.Size(250, 50);
             this.buttonRegion.TabIndex = 4;
             this.buttonRegion.Text = "Показать выработки для этого района";
             this.buttonRegion.UseVisualStyleBackColor = false;
@@ -209,31 +208,22 @@
             this.groupBoxVirabotka.Controls.Add(this.comboBoxPodetag);
             this.groupBoxVirabotka.Controls.Add(this.comboBoxBlock);
             this.groupBoxVirabotka.Controls.Add(this.comboBoxVirabotka);
-            this.groupBoxVirabotka.Location = new System.Drawing.Point(376, 29);
+            this.groupBoxVirabotka.Location = new System.Drawing.Point(385, 29);
             this.groupBoxVirabotka.Name = "groupBoxVirabotka";
-            this.groupBoxVirabotka.Size = new System.Drawing.Size(444, 291);
+            this.groupBoxVirabotka.Size = new System.Drawing.Size(711, 290);
             this.groupBoxVirabotka.TabIndex = 13;
             this.groupBoxVirabotka.TabStop = false;
             this.groupBoxVirabotka.Text = "Место измерения";
             this.groupBoxVirabotka.Visible = false;
             // 
-            // treeView1
-            // 
-            this.treeView1.Location = new System.Drawing.Point(899, 38);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(67, 282);
-            this.treeView1.TabIndex = 14;
-            // 
             // groupBoxFromFile
             // 
-            this.groupBoxFromFile.Controls.Add(this.labelDataGridInfo);
             this.groupBoxFromFile.Controls.Add(this.listViewZameri);
             this.groupBoxFromFile.Controls.Add(this.buttonUploadData);
             this.groupBoxFromFile.Controls.Add(this.labelUploaded);
-            this.groupBoxFromFile.Controls.Add(this.dataGridViewAllAngel);
-            this.groupBoxFromFile.Location = new System.Drawing.Point(86, 369);
+            this.groupBoxFromFile.Location = new System.Drawing.Point(88, 369);
             this.groupBoxFromFile.Name = "groupBoxFromFile";
-            this.groupBoxFromFile.Size = new System.Drawing.Size(425, 645);
+            this.groupBoxFromFile.Size = new System.Drawing.Size(280, 570);
             this.groupBoxFromFile.TabIndex = 15;
             this.groupBoxFromFile.TabStop = false;
             this.groupBoxFromFile.Text = "Загрузить данные Ангела";
@@ -242,9 +232,9 @@
             // 
             this.listViewZameri.FullRowSelect = true;
             this.listViewZameri.GridLines = true;
-            this.listViewZameri.Location = new System.Drawing.Point(9, 144);
+            this.listViewZameri.Location = new System.Drawing.Point(9, 153);
             this.listViewZameri.Name = "listViewZameri";
-            this.listViewZameri.Size = new System.Drawing.Size(401, 206);
+            this.listViewZameri.Size = new System.Drawing.Size(250, 406);
             this.listViewZameri.TabIndex = 17;
             this.listViewZameri.UseCompatibleStateImageBehavior = false;
             this.listViewZameri.View = System.Windows.Forms.View.Details;
@@ -253,9 +243,9 @@
             // buttonUploadData
             // 
             this.buttonUploadData.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonUploadData.Location = new System.Drawing.Point(9, 42);
+            this.buttonUploadData.Location = new System.Drawing.Point(9, 29);
             this.buttonUploadData.Name = "buttonUploadData";
-            this.buttonUploadData.Size = new System.Drawing.Size(216, 35);
+            this.buttonUploadData.Size = new System.Drawing.Size(250, 50);
             this.buttonUploadData.TabIndex = 3;
             this.buttonUploadData.Text = "Загрузить данные";
             this.buttonUploadData.UseVisualStyleBackColor = false;
@@ -265,22 +255,10 @@
             // 
             this.labelUploaded.AutoSize = true;
             this.labelUploaded.Location = new System.Drawing.Point(14, 82);
-            this.labelUploaded.MaximumSize = new System.Drawing.Size(400, 0);
+            this.labelUploaded.MaximumSize = new System.Drawing.Size(250, 0);
             this.labelUploaded.Name = "labelUploaded";
             this.labelUploaded.Size = new System.Drawing.Size(0, 17);
             this.labelUploaded.TabIndex = 2;
-            // 
-            // dataGridViewAllAngel
-            // 
-            this.dataGridViewAllAngel.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dataGridViewAllAngel.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
-            this.dataGridViewAllAngel.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewAllAngel.Location = new System.Drawing.Point(11, 397);
-            this.dataGridViewAllAngel.Name = "dataGridViewAllAngel";
-            this.dataGridViewAllAngel.RowHeadersVisible = false;
-            this.dataGridViewAllAngel.RowTemplate.Height = 24;
-            this.dataGridViewAllAngel.Size = new System.Drawing.Size(401, 118);
-            this.dataGridViewAllAngel.TabIndex = 16;
             // 
             // label6
             // 
@@ -302,58 +280,73 @@
             // groupBoxZamer
             // 
             this.groupBoxZamer.AutoSize = true;
-            this.groupBoxZamer.Controls.Add(this.button1);
-            this.groupBoxZamer.Controls.Add(this.dataGridView1);
+            this.groupBoxZamer.Controls.Add(this.labelChoosedPlace);
             this.groupBoxZamer.Controls.Add(this.label8);
+            this.groupBoxZamer.Controls.Add(this.button1);
+            this.groupBoxZamer.Controls.Add(this.dataGridViewZamer);
+            this.groupBoxZamer.Controls.Add(this.labelZamer);
             this.groupBoxZamer.Controls.Add(this.textBox1);
             this.groupBoxZamer.Controls.Add(this.label7);
             this.groupBoxZamer.Controls.Add(this.dateTimePicker1);
             this.groupBoxZamer.Controls.Add(this.label6);
-            this.groupBoxZamer.Location = new System.Drawing.Point(547, 369);
+            this.groupBoxZamer.Location = new System.Drawing.Point(385, 369);
             this.groupBoxZamer.Name = "groupBoxZamer";
-            this.groupBoxZamer.Size = new System.Drawing.Size(549, 566);
+            this.groupBoxZamer.Size = new System.Drawing.Size(711, 570);
             this.groupBoxZamer.TabIndex = 16;
             this.groupBoxZamer.TabStop = false;
             this.groupBoxZamer.Text = "Привязка измерений по дате и месту";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(261, 29);
+            this.label8.MaximumSize = new System.Drawing.Size(400, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(210, 17);
+            this.label8.TabIndex = 7;
+            this.label8.Text = "Выбранное место измерения: ";
+            // 
             // button1
             // 
             this.button1.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.button1.Location = new System.Drawing.Point(9, 500);
+            this.button1.Location = new System.Drawing.Point(9, 498);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(270, 45);
+            this.button1.Size = new System.Drawing.Size(250, 50);
             this.button1.TabIndex = 6;
             this.button1.Text = "Записать в базу?";
             this.button1.UseVisualStyleBackColor = false;
             // 
-            // dataGridView1
+            // dataGridViewZamer
             // 
-            this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(9, 249);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(386, 215);
-            this.dataGridView1.TabIndex = 5;
+            this.dataGridViewZamer.AllowUserToAddRows = false;
+            this.dataGridViewZamer.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridViewZamer.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
+            this.dataGridViewZamer.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewZamer.Location = new System.Drawing.Point(9, 249);
+            this.dataGridViewZamer.Name = "dataGridViewZamer";
+            this.dataGridViewZamer.RowHeadersVisible = false;
+            this.dataGridViewZamer.RowTemplate.Height = 24;
+            this.dataGridViewZamer.Size = new System.Drawing.Size(600, 215);
+            this.dataGridViewZamer.TabIndex = 5;
             // 
-            // label8
+            // labelZamer
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 204);
-            this.label8.MaximumSize = new System.Drawing.Size(400, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(139, 17);
-            this.label8.TabIndex = 4;
-            this.label8.Text = "Выбранные замеры";
+            this.labelZamer.AutoSize = true;
+            this.labelZamer.Location = new System.Drawing.Point(6, 204);
+            this.labelZamer.MaximumSize = new System.Drawing.Size(600, 0);
+            this.labelZamer.Name = "labelZamer";
+            this.labelZamer.Size = new System.Drawing.Size(455, 17);
+            this.labelZamer.TabIndex = 4;
+            this.labelZamer.Text = "Выбранные замеры (выберите в списке слева один или несколько)";
             // 
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(9, 121);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(377, 54);
+            this.textBox1.Size = new System.Drawing.Size(600, 54);
             this.textBox1.TabIndex = 3;
-            this.textBox1.Text = "Введите подробное описание места измерения";
+            this.textBox1.Text = "Привязка места измерения в рамках выработки, блока и подэтажа, выбранных сверху";
             // 
             // label7
             // 
@@ -364,23 +357,23 @@
             this.label7.TabIndex = 2;
             this.label7.Text = "Привязка";
             // 
-            // labelDataGridInfo
+            // labelChoosedPlace
             // 
-            this.labelDataGridInfo.AutoSize = true;
-            this.labelDataGridInfo.Location = new System.Drawing.Point(13, 371);
-            this.labelDataGridInfo.Name = "labelDataGridInfo";
-            this.labelDataGridInfo.Size = new System.Drawing.Size(0, 17);
-            this.labelDataGridInfo.TabIndex = 18;
+            this.labelChoosedPlace.AutoSize = true;
+            this.labelChoosedPlace.Location = new System.Drawing.Point(264, 59);
+            this.labelChoosedPlace.MaximumSize = new System.Drawing.Size(400, 0);
+            this.labelChoosedPlace.Name = "labelChoosedPlace";
+            this.labelChoosedPlace.Size = new System.Drawing.Size(0, 17);
+            this.labelChoosedPlace.TabIndex = 8;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(1176, 946);
+            this.ClientSize = new System.Drawing.Size(1176, 982);
             this.Controls.Add(this.groupBoxZamer);
             this.Controls.Add(this.groupBoxFromFile);
-            this.Controls.Add(this.treeView1);
             this.Controls.Add(this.groupBoxVirabotka);
             this.Controls.Add(this.groupBoxRegion);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -393,10 +386,9 @@
             this.groupBoxVirabotka.PerformLayout();
             this.groupBoxFromFile.ResumeLayout(false);
             this.groupBoxFromFile.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAllAngel)).EndInit();
             this.groupBoxZamer.ResumeLayout(false);
             this.groupBoxZamer.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewZamer)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -420,21 +412,20 @@
         private System.Windows.Forms.Button buttonRegion;
         private System.Windows.Forms.GroupBox groupBoxVirabotka;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.GroupBox groupBoxFromFile;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button buttonUploadData;
         private System.Windows.Forms.Label labelUploaded;
-        private System.Windows.Forms.DataGridView dataGridViewAllAngel;
         private System.Windows.Forms.ListView listViewZameri;
         private System.Windows.Forms.GroupBox groupBoxZamer;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.DataGridView dataGridViewZamer;
+        private System.Windows.Forms.Label labelZamer;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label labelDataGridInfo;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label labelChoosedPlace;
     }
 }
 

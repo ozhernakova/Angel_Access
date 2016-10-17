@@ -16,6 +16,7 @@ namespace Angel_Access
     {
         accessConnect aC;
         AngelDataList aDL;
+        List <AngelData> chozenZameri;
         public Form1()
         {
             InitializeComponent();
@@ -46,6 +47,12 @@ namespace Angel_Access
 
         private void buttonRegion_Click(object sender, EventArgs e)
         {
+            horizonQuery();
+            
+        }
+
+        void horizonQuery() 
+        {
             string tmp1 = comboBoxHorizont.SelectedIndex.ToString();
             string tmp2 = comboBoxRegion.SelectedIndex.ToString();
 
@@ -59,6 +66,8 @@ namespace Angel_Access
                 groupBoxVirabotka.Visible = true;
                 fillComboBox();
 
+                
+
                 //MessageBox.Show("выбрана выработка1" + comboBoxVirabotka.Text);
 
                 this.comboBoxVirabotka.SelectedIndexChanged += new System.EventHandler(this.comboBoxVirabotka_SelectedIndexChanged);
@@ -68,20 +77,27 @@ namespace Angel_Access
 
                 //comboBoxPodetag.DataSource = aC.dtd.virabotki;
                 //comboBoxPodetag.DisplayMember = "Подэтаж";
-                
- 
+
+                this.comboBoxHorizont.SelectedIndexChanged += new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
+                this.comboBoxRegion.SelectedIndexChanged += new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
+
 
 
             }
-                
-            else 
-            { 
+
+            else
+            {
                 groupBoxVirabotka.Visible = false;
                 this.comboBoxVirabotka.SelectedIndexChanged -= this.comboBoxVirabotka_SelectedIndexChanged;
+                this.comboBoxHorizont.SelectedIndexChanged -= new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
+                this.comboBoxRegion.SelectedIndexChanged -= new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
                 MessageBox.Show(@"в базе не найдены выработки для горизонта  " + comboBoxHorizont.Text + " и участка " + comboBoxRegion.Text + "\n" + "Добавить новую выработку в базу можно только через Access, программу ПЭЗ_И.accdb", "Выработки не найдены", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                labelChoosedPlace.Text = "";
+
             }
-               
-            
+
+ 
+        
         }
 
         void fillComboBox() 
@@ -100,19 +116,24 @@ namespace Angel_Access
 
             comboBoxPodetag.DataSource = view;
             comboBoxPodetag.DisplayMember = "Подэтаж";
-        
+
+            labelChoosedPlace_Fill();
+        }
+
+        private void labelChoosedPlace_Fill() 
+        {
+            labelChoosedPlace.Text = "Горизонт: "+ comboBoxHorizont.Text +" Выработка: " + comboBoxVirabotka.Text + ", блок: " + comboBoxBlock.Text + ", подэтаж: " + comboBoxPodetag.Text;
+
         }
 
         private void comboBoxVirabotka_SelectedIndexChanged(object sender, EventArgs e)
         {
-          //  MessageBox.Show("выбрана выработка2" + comboBoxVirabotka.Text);
             fillComboBox();
-
         }
 
         private void comboBoxPodetag_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            labelChoosedPlace_Fill();
         }
 
         private void buttonUploadData_Click(object sender, EventArgs e)
@@ -131,11 +152,13 @@ namespace Angel_Access
                     if (( openFileDialog1.OpenFile()) != null)
                     {
                         labelUploaded.Text = "Загружен файл с измерениями "+ openFileDialog1.FileName;
-                        labelDataGridInfo.Text = "";
+                        
                         // зачистили контролы
-                        dataGridViewAllAngel.DataSource = null;
+                        
                         listViewZameri.Clear();
                         aDL = new AngelDataList();
+                        dataGridViewZamer.DataSource = null;
+                        labelZamer.Text = "Выберите нужные замеры из списка";
                        
 
                         file = new StreamReader(openFileDialog1.FileName);
@@ -148,14 +171,12 @@ namespace Angel_Access
                             counter++;
                         }
                         int i = aDL.zameri();
-                        labelUploaded.Text = labelUploaded.Text + " Выделено " + i + " отдельных замеров";
+                        labelUploaded.Text = labelUploaded.Text + " Выделено " + i + " отдельных замеров. ";
 
                     }
 
-                    labelDataGridInfo.Text = "Считанный файл в табличной форме";
-                    dataGridViewAllAngel.DataSource = aDL.adl;
-                    dataGridViewAllAngel.Update();
-                                    
+                    
+                                                        
                     // добавляем элемент в ListView
                     listViewZameri.Items.AddRange(aDL.lvi_list.ToArray());
                     // Create some column headers for the data. 
@@ -178,15 +199,20 @@ namespace Angel_Access
 
         private void listViewZameri_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Какие замеры мы выбрали?
+            // Какие замеры мы выбрали? 
+            // https://msdn.microsoft.com/ru-ru/library/system.windows.forms.listview.selecteditems(v=vs.110).aspx
             ListView.SelectedListViewItemCollection choice = listViewZameri.SelectedItems;
-            label8.Text = "";
+            chozenZameri = new List <AngelData>();
+            labelZamer.Text = "";
+            List <int> ch = new List <int>();
+            int i=0;
             foreach ( ListViewItem item in choice )
 	        {
-		            label8.Text += item.SubItems[0].Text+" " ;
+		            labelZamer.Text += item.SubItems[0].Text+" " ;
+                    ch.Add (item.Index);
 	        }
-
-           
+           chozenZameri = aDL.getchoosenZameri (ch.ToArray());
+           dataGridViewZamer.DataSource = chozenZameri;
 
         }
 
@@ -214,5 +240,17 @@ namespace Angel_Access
             
         
         }
+
+        private void comboBoxRegion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            horizonQuery();
+        }
+
+        private void comboBoxBlock_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            labelChoosedPlace_Fill();
+        }
+
+        
     }
 }
