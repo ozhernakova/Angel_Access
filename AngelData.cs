@@ -9,10 +9,11 @@ namespace Angel_Access
 {
     public struct AngelData
     {
-        // 19 полей
+        // 20 полей (в файле 21, но дату и время складываем в одно)
         public int Line { get; set; }
         public int Picket { get; set; }
         public int Comp { get; set; }
+        public DateTime Dt { get; set; }
         public int t { get; set; }
         public string A { get; set; }
         public string Lmin { get; set; }
@@ -30,11 +31,33 @@ namespace Angel_Access
         public string L9 { get; set; }
         public string L10 { get; set; }
 
-        public string [] alldata 
-        {
-            get { return new String[] { Line.ToString(), Picket.ToString(), Comp.ToString(), t.ToString(),A, Lmin, Lmax, VarA, B}; }
-        }
+
     }
+    //public struct AngelData
+    //{
+    //    // 19 полей
+    //    public int Line { get; set; }
+    //    public int Picket { get; set; }
+    //    public int Comp { get; set; }
+    //    public int t { get; set; }
+    //    public string A { get; set; }
+    //    public string Lmin { get; set; }
+    //    public string Lmax { get; set; }
+    //    public string VarA { get; set; }
+    //    public string B { get; set; }
+    //    public string L1 { get; set; }
+    //    public string L2 { get; set; }
+    //    public string L3 { get; set; }
+    //    public string L4 { get; set; }
+    //    public string L5 { get; set; }
+    //    public string L6 { get; set; }
+    //    public string L7 { get; set; }
+    //    public string L8 { get; set; }
+    //    public string L9 { get; set; }
+    //    public string L10 { get; set; }
+
+       
+    //}
 
     public class Zamer 
     {
@@ -63,13 +86,9 @@ namespace Angel_Access
             List<AngelData> res = new List<AngelData>();
 
             foreach (int item in items)
-            {
-                foreach (AngelData tmp in zd[item].odinZamer ) 
-                {
-                    res.Add(tmp);
-                }
-            }                   
-
+                 foreach (AngelData tmp in zd[item].odinZamer ) 
+                       res.Add(tmp);
+                                
             return res;
         } 
 
@@ -132,32 +151,37 @@ namespace Angel_Access
 
         public void addAngelData(string line) {
         // проверяем что там цифры
-            string[] stringSeparators = new string[] { " " };
+            string[] stringSeparators = new string[] { " ", "\t" };
             string[] angelString = line.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
 
         // проверяем что там цифры
         int x;
         
-        if (Int32.TryParse(angelString[0], out x) && angelString.Length == 19) 
+        if (Int32.TryParse(angelString[0], out x) && angelString.Length == 21) 
         { 
             AngelData ad = new AngelData();
             ad.Line = x;
             ad.Picket = Int32.Parse(angelString[1]);
             ad.Comp = Int32.Parse(angelString[2]);
-            ad.t = Int32.Parse(angelString[3]);
-            ad.A = angelString[4];
-            ad.VarA = angelString[5];
-            ad.B = angelString[6];
-            ad.L1 = angelString[7];
-            ad.L2 = angelString[8];
-            ad.L3 = angelString[9];
-            ad.L4 = angelString[10];
-            ad.L5 = angelString[11];
-            ad.L6 = angelString[12];
-            ad.L7 = angelString[13];
-            ad.L8 = angelString[14];
-            ad.L9 = angelString[15];
-            ad.L10 = angelString[16];
+            string dateString = angelString[3] + " " + angelString[4];
+            ad.Dt = DateTime.Parse(dateString);  // тут возможны проблемы при других рег установках?
+            
+            ad.t = Int32.Parse(angelString[5]);
+            ad.A = angelString[6];
+            ad.Lmin = angelString[7];
+            ad.Lmax = angelString[8];
+            ad.VarA = angelString[9];
+            ad.B = angelString[10];
+            ad.L1 = angelString[11];
+            ad.L2 = angelString[12];
+            ad.L3 = angelString[13];
+            ad.L4 = angelString[14];
+            ad.L5 = angelString[15];
+            ad.L6 = angelString[16];
+            ad.L7 = angelString[17];
+            ad.L8 = angelString[18];
+            ad.L9 = angelString[19];
+            ad.L10 = angelString[20];
             adl.Add(ad);
   
             }

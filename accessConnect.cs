@@ -18,14 +18,15 @@ namespace Angel_Access
     }
     class accessConnect
     {
-        string strConPosition = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=H:\\OLYA\\mulev\\PEZ\\PEZ_tbl.accdb"; 
+        string strConPosition ; 
         string strConAngel; // строка соединения с базой, из которой читаем и пишем данные прибора
         
         public dataToDisplay dtd = new dataToDisplay();
 
-        public accessConnect ()
+        public accessConnect (string path)
         {
-        LoadPosition();
+            strConPosition = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source="+path; //   H:\\OLYA\\mulev\\PEZ\\PEZ_tbl.accdb
+            LoadPosition();
         }
 
          private void LoadPosition()

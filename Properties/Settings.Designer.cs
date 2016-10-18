@@ -32,5 +32,17 @@ namespace Angel_Access.Properties {
                 return ((string)(this["PES_I_ConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("H:\\OLYA\\mulev\\PEZ\\PEZ_tbl.accdb")]
+        public string path {
+            get {
+                return ((string)(this["path"]));
+            }
+            set {
+                this["path"] = value;
+            }
+        }
     }
 }

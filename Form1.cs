@@ -24,26 +24,50 @@ namespace Angel_Access
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            aC = new accessConnect();
             aDL = new AngelDataList();
-          
-
+            openFileDialogAccess.Filter = "Таблица с данными PEZ_tbl |*.accdb| файлы Access (*.accdb)|*.accdb";
+                       
             // TODO: проверить связь с базой акцесса. Если нет - предложить выбрать путь к ней.
-            
-            
 
-            comboBoxHorizont.DataSource = aC.dtd.horizons;
-            comboBoxHorizont.DisplayMember = "Горизонт";
+            string path = Properties.Settings.Default.path;
+           
+            if (File.Exists(path)) 
+            {
+                aC = new accessConnect(path);
+                comboBoxHorizont.DataSource = aC.dtd.horizons;
+                comboBoxHorizont.DisplayMember = "Горизонт";
+                comboBoxRegion.DataSource = aC.dtd.regions;
+                comboBoxRegion.DisplayMember = "Участок";
+            }
+            else 
+            {
+                if (openFileDialogAccess.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    path = openFileDialogAccess.FileName;
+                    aC = new accessConnect(path);
+                    comboBoxHorizont.DataSource = aC.dtd.horizons;
+                    comboBoxHorizont.DisplayMember = "Горизонт";
+                    comboBoxRegion.DataSource = aC.dtd.regions;
+                    comboBoxRegion.DisplayMember = "Участок";
+                    Properties.Settings.Default.path = path;
+                    Properties.Settings.Default.Save();
 
-           // comboBoxRegion.DataSource = aC.dtd.regions.Tables[0];
-            comboBoxRegion.DataSource = aC.dtd.regions;
-            comboBoxRegion.DisplayMember = "Участок";
+                }
 
-            dateTimePicker1.Value = DateTime.Today;
-
+                 else
+                {
+                    labelMissingBase.Text = "путь к базе Access отсутствует. Нельзя определить место измерений, нельзя записать измерения в базу. Пожалуйста, найдите путь к таблице PEZ_tbl.accdb ";
+                    button1.Visible = false;
+                    comboBoxHorizont.DataSource = null;
+                    comboBoxRegion.DataSource = null;
+                    groupBoxRegion.Visible = false;
+                   
+                }
+                
+            }
+  
+       } 
     
-
-        }
 
         private void buttonRegion_Click(object sender, EventArgs e)
         {
@@ -63,7 +87,7 @@ namespace Angel_Access
 
                 comboBoxVirabotka.DataSource = aC.dtd.virabotki;
                 comboBoxVirabotka.DisplayMember = "Выработка";
-                groupBoxVirabotka.Visible = true;
+                //groupBoxVirabotka.Visible = true;
                 fillComboBox();
 
                 
@@ -71,12 +95,6 @@ namespace Angel_Access
                 //MessageBox.Show("выбрана выработка1" + comboBoxVirabotka.Text);
 
                 this.comboBoxVirabotka.SelectedIndexChanged += new System.EventHandler(this.comboBoxVirabotka_SelectedIndexChanged);
-
-                //comboBoxBlock.DataSource = aC.dtd.virabotki;
-                //comboBoxBlock.DisplayMember = "Блок";
-
-                //comboBoxPodetag.DataSource = aC.dtd.virabotki;
-                //comboBoxPodetag.DisplayMember = "Подэтаж";
 
                 this.comboBoxHorizont.SelectedIndexChanged += new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
                 this.comboBoxRegion.SelectedIndexChanged += new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
@@ -87,12 +105,12 @@ namespace Angel_Access
 
             else
             {
-                groupBoxVirabotka.Visible = false;
+                //groupBoxVirabotka.Visible = false;
                 this.comboBoxVirabotka.SelectedIndexChanged -= this.comboBoxVirabotka_SelectedIndexChanged;
                 this.comboBoxHorizont.SelectedIndexChanged -= new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
                 this.comboBoxRegion.SelectedIndexChanged -= new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
                 MessageBox.Show(@"в базе не найдены выработки для горизонта  " + comboBoxHorizont.Text + " и участка " + comboBoxRegion.Text + "\n" + "Добавить новую выработку в базу можно только через Access, программу ПЭЗ_И.accdb", "Выработки не найдены", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                labelChoosedPlace.Text = "";
+                
 
             }
 
@@ -117,23 +135,14 @@ namespace Angel_Access
             comboBoxPodetag.DataSource = view;
             comboBoxPodetag.DisplayMember = "Подэтаж";
 
-            labelChoosedPlace_Fill();
+            
         }
 
-        private void labelChoosedPlace_Fill() 
-        {
-            labelChoosedPlace.Text = "Горизонт: "+ comboBoxHorizont.Text +" Выработка: " + comboBoxVirabotka.Text + ", блок: " + comboBoxBlock.Text + ", подэтаж: " + comboBoxPodetag.Text;
-
-        }
+        
 
         private void comboBoxVirabotka_SelectedIndexChanged(object sender, EventArgs e)
         {
             fillComboBox();
-        }
-
-        private void comboBoxPodetag_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            labelChoosedPlace_Fill();
         }
 
         private void buttonUploadData_Click(object sender, EventArgs e)
@@ -192,27 +201,26 @@ namespace Angel_Access
             }
         }
 
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
+        
         private void listViewZameri_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Какие замеры мы выбрали? 
             // https://msdn.microsoft.com/ru-ru/library/system.windows.forms.listview.selecteditems(v=vs.110).aspx
             ListView.SelectedListViewItemCollection choice = listViewZameri.SelectedItems;
-            chozenZameri = new List <AngelData>();
+            
+            
             labelZamer.Text = "";
             List <int> ch = new List <int>();
-            int i=0;
+            
             foreach ( ListViewItem item in choice )
 	        {
 		            labelZamer.Text += item.SubItems[0].Text+" " ;
                     ch.Add (item.Index);
 	        }
+            if (choice.Count > 0) { 
+           chozenZameri = new List<AngelData>();
            chozenZameri = aDL.getchoosenZameri (ch.ToArray());
-           dataGridViewZamer.DataSource = chozenZameri;
+           dataGridViewZamer.DataSource = chozenZameri;}
 
         }
 
@@ -246,9 +254,11 @@ namespace Angel_Access
             horizonQuery();
         }
 
-        private void comboBoxBlock_SelectedIndexChanged(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            labelChoosedPlace_Fill();
+            // проверить что данные есть
+            if (dataGridViewZamer.RowCount < 1 || comboBoxVirabotka.Text == "" || textBoxPriviazka.Text == "" || textBoxPriviazka.Text == "Привязка места измерения в рамках выработки, блока и подэтажа, выбранных сверху")
+            { MessageBox.Show("данные не заполнены"); return; } 
         }
 
         
