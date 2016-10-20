@@ -44,5 +44,17 @@ namespace Angel_Access.Properties {
                 this["path"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("H:\\OLYA\\mulev\\Angel")]
+        public string angelpath {
+            get {
+                return ((string)(this["angelpath"]));
+            }
+            set {
+                this["angelpath"] = value;
+            }
+        }
     }
 }

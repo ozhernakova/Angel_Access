@@ -18,9 +18,6 @@
             <setting name="path" serializeAs="String">
                 <value>H:\OLYA\mulev\PEZ\PEZ_tbl.accdb</value>
             </setting>
-            <setting name="angelpath" serializeAs="String">
-                <value>H:\OLYA\mulev\Angel</value>
-            </setting>
         </Angel_Access.Properties.Settings>
     </userSettings>
 </configuration>

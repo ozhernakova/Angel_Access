@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace Angel_Access
 {
     public partial class Form1 : Form
@@ -17,6 +18,7 @@ namespace Angel_Access
         accessConnect aC;
         AngelDataList aDL;
         List <AngelData> chozenZameri;
+        
         public Form1()
         {
             InitializeComponent();
@@ -26,7 +28,8 @@ namespace Angel_Access
         {
             aDL = new AngelDataList();
             openFileDialogAccess.Filter = "Таблица с данными PEZ_tbl |*.accdb| файлы Access (*.accdb)|*.accdb";
-                       
+            openFileDialogAccess.InitialDirectory = Application.StartupPath; 
+          
             // TODO: проверить связь с базой акцесса. Если нет - предложить выбрать путь к ней.
 
             string path = Properties.Settings.Default.path;
@@ -34,10 +37,7 @@ namespace Angel_Access
             if (File.Exists(path)) 
             {
                 aC = new accessConnect(path);
-                comboBoxHorizont.DataSource = aC.dtd.horizons;
-                comboBoxHorizont.DisplayMember = "Горизонт";
-                comboBoxRegion.DataSource = aC.dtd.regions;
-                comboBoxRegion.DisplayMember = "Участок";
+                comboBoxes_Load();
             }
             else 
             {
@@ -45,10 +45,7 @@ namespace Angel_Access
                 {
                     path = openFileDialogAccess.FileName;
                     aC = new accessConnect(path);
-                    comboBoxHorizont.DataSource = aC.dtd.horizons;
-                    comboBoxHorizont.DisplayMember = "Горизонт";
-                    comboBoxRegion.DataSource = aC.dtd.regions;
-                    comboBoxRegion.DisplayMember = "Участок";
+                    comboBoxes_Load();
                     Properties.Settings.Default.path = path;
                     Properties.Settings.Default.Save();
 
@@ -66,50 +63,72 @@ namespace Angel_Access
                 
             }
   
-       } 
+       }
+
+        void comboBoxes_Load() 
+        {
+            comboBoxHorizont.DataSource = aC.dtd.horizons;
+            comboBoxHorizont.DisplayMember = "Горизонт";
+            comboBoxRegion.DataSource = aC.dtd.regions;
+            comboBoxRegion.DisplayMember = "Участок";
+          
+            comboBoxNapravlenie.DataSource = aC.dtd.napravlenie;
+            comboBoxNapravlenie.DisplayMember = "Направление";
+  
+        }
+
+        void comboBoxes_Clear() 
+        {
+            
+        }
     
 
         private void buttonRegion_Click(object sender, EventArgs e)
         {
             horizonQuery();
-            
         }
 
         void horizonQuery() 
         {
-            string tmp1 = comboBoxHorizont.SelectedIndex.ToString();
-            string tmp2 = comboBoxRegion.SelectedIndex.ToString();
+            
+            int lineNumber = aC.virabotka(comboBoxHorizont.Text, comboBoxRegion.Text);
 
-            int lineNumber = aC.virabotka(tmp1, tmp2);
-            NumberOfVirabot.Text = "Найдено выработок: " + lineNumber + " Добавить новую выработку в базу можно только через Access, программу ПЭЗ_И.accdb";
+            NumberOfVirabot.Visible = true;
+            NumberOfVirabot.Text = "Найдено выработок: " + lineNumber; 
+
             if (lineNumber > 0)
             {
 
                 comboBoxVirabotka.DataSource = aC.dtd.virabotki;
                 comboBoxVirabotka.DisplayMember = "Выработка";
-                //groupBoxVirabotka.Visible = true;
+                groupBoxVirabotka.Visible = true;
                 fillComboBox();
 
-                
+                labelHor.Text = "Выработки для горизонта " + comboBoxHorizont.Text + " и участка " + comboBoxRegion.Text;
 
                 //MessageBox.Show("выбрана выработка1" + comboBoxVirabotka.Text);
 
                 this.comboBoxVirabotka.SelectedIndexChanged += new System.EventHandler(this.comboBoxVirabotka_SelectedIndexChanged);
 
-                this.comboBoxHorizont.SelectedIndexChanged += new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
-                this.comboBoxRegion.SelectedIndexChanged += new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
-
+             //   this.comboBoxHorizont.SelectedIndexChanged += new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
+             //   this.comboBoxRegion.SelectedIndexChanged += new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
+                labelHor.Text = comboBoxHorizont.Text;
+                labelReg.Text = comboBoxRegion.Text;
 
 
             }
 
             else
             {
-                //groupBoxVirabotka.Visible = false;
+                comboBoxVirabotka.DataSource = null;
+                comboBoxPriviazka.Text = "";
+                labelHor.Text = "";
+                labelReg.Text = "";
+              //  groupBoxVirabotka.Visible = false;
                 this.comboBoxVirabotka.SelectedIndexChanged -= this.comboBoxVirabotka_SelectedIndexChanged;
-                this.comboBoxHorizont.SelectedIndexChanged -= new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
-                this.comboBoxRegion.SelectedIndexChanged -= new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
-                MessageBox.Show(@"в базе не найдены выработки для горизонта  " + comboBoxHorizont.Text + " и участка " + comboBoxRegion.Text + "\n" + "Добавить новую выработку в базу можно только через Access, программу ПЭЗ_И.accdb", "Выработки не найдены", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+             //   this.comboBoxHorizont.SelectedIndexChanged -= new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
+             //   this.comboBoxRegion.SelectedIndexChanged -= new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
+                MessageBox.Show(@"в базе не найдены выработки для горизонта  " + comboBoxHorizont.Text + " и участка " + comboBoxRegion.Text + "\n" + "Добавить новую выработку в базу можно только через форму ПЭЗ_И.accdb", "Выработки не найдены", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 
 
             }
@@ -136,6 +155,18 @@ namespace Angel_Access
             comboBoxPodetag.DisplayMember = "Подэтаж";
 
             
+            // для привязок - показываем варианты выбора (их можно редактировать) и готовим новое поле для нового варианта
+            EnumerableRowCollection<DataRow> query1 = from order in aC.dtd.priviazki.AsEnumerable()
+                                                     where order.Field<String>("Выработка") == comboBoxVirabotka.Text
+                                                     select order;
+            DataView view1 = query1.AsDataView();
+
+            comboBoxPriviazka.DataSource = view1;
+            comboBoxPriviazka.DisplayMember = "Привязка";
+
+            textBoxPriviazka.Text = "";
+
+            
         }
 
         
@@ -149,13 +180,15 @@ namespace Angel_Access
         {
             // загрузить файл с данными
             StreamReader file = null;
-            openFileDialog1.InitialDirectory = "h:\\OLYA\\mulev\angel";
+            openFileDialog1.InitialDirectory = Properties.Settings.Default.angelpath;
+               // Application.StartupPath;  // поставить текущую
             openFileDialog1.Filter = "txt  (*.txt)|*.txt|Все файлы (*.*)|*.*";
             openFileDialog1.FilterIndex = 1;
             openFileDialog1.RestoreDirectory = true;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-
+                Properties.Settings.Default.angelpath = Path.GetDirectoryName(openFileDialog1.FileName);
+                Properties.Settings.Default.Save();
                 try
                 {
                     if (( openFileDialog1.OpenFile()) != null)
@@ -175,7 +208,7 @@ namespace Angel_Access
                         string line;
                         while ((line = file.ReadLine()) != null)
                         {
-                            System.Console.WriteLine(line);
+                           // System.Console.WriteLine(line);
                             aDL.addAngelData(line);
                             counter++;
                         }
@@ -183,9 +216,7 @@ namespace Angel_Access
                         labelUploaded.Text = labelUploaded.Text + " Выделено " + i + " отдельных замеров. ";
 
                     }
-
-                    
-                                                        
+                                                      
                     // добавляем элемент в ListView
                     listViewZameri.Items.AddRange(aDL.lvi_list.ToArray());
                     // Create some column headers for the data. 
@@ -204,8 +235,13 @@ namespace Angel_Access
         
         private void listViewZameri_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Какие замеры мы выбрали? 
+        }
+
+        private void updateSelectionData()
+        {
+                        // Какие замеры мы выбрали? 
             // https://msdn.microsoft.com/ru-ru/library/system.windows.forms.listview.selecteditems(v=vs.110).aspx
+            // было на private void listViewZameri_SelectedIndexChanged(object sender, EventArgs e), но если выбирается много, очень медленно работает
             ListView.SelectedListViewItemCollection choice = listViewZameri.SelectedItems;
             
             
@@ -221,7 +257,6 @@ namespace Angel_Access
            chozenZameri = new List<AngelData>();
            chozenZameri = aDL.getchoosenZameri (ch.ToArray());
            dataGridViewZamer.DataSource = chozenZameri;}
-
         }
 
         void listViewZameriHeader()
@@ -257,8 +292,56 @@ namespace Angel_Access
         private void button1_Click(object sender, EventArgs e)
         {
             // проверить что данные есть
-            if (dataGridViewZamer.RowCount < 1 || comboBoxVirabotka.Text == "" || textBoxPriviazka.Text == "" || textBoxPriviazka.Text == "Привязка места измерения в рамках выработки, блока и подэтажа, выбранных сверху")
-            { MessageBox.Show("данные не заполнены"); return; } 
+            int num = dataGridViewZamer.RowCount;
+            if (num < 1)
+                    { MessageBox.Show("замеры не выбраны"); return; }
+            if (textBoxPriviazka.Text == "")
+                { MessageBox.Show("Отсутствует привязка"); return; }
+
+            string[] param = new string[] {num.ToString(), labelHor.Text, labelReg.Text, comboBoxVirabotka.Text, comboBoxBlock.Text, comboBoxPodetag.Text, textBoxPriviazka.Text, comboBoxNapravlenie.Text };
+            string tmp = 
+                string.Format("Записываем в базу все выбранные замеры. Их выбрано: {0} \n Измерения были проведены в следующем месте: \n Горизонт: {1} \n Участок: {2} \n Выработка: {3} \n Блок: {4} \n Подэтаж: {5} \n Привязка: {6} \n Направление: {7}", param);
+        
+            DialogResult result = MessageBox.Show(tmp, "Подтвердите!", MessageBoxButtons.OKCancel);
+
+            if (result == DialogResult.OK) 
+            {
+                 aC.SaveAngel(chozenZameri, param);
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // запуск Access 
+            string pathtobase = Path.GetDirectoryName (Properties.Settings.Default.path);
+
+            Process.Start(pathtobase + "\\ПЭЗ_И.accdb");
+
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+        }
+
+        private void listViewZameri_KeyUp(object sender, KeyEventArgs e)
+        {
+
+            if (e.KeyValue != 16 && e.KeyValue != 17)
+            {
+                updateSelectionData();
+            }
+        
+        }
+
+        private void listViewZameri_Click(object sender, EventArgs e)
+        {
+            updateSelectionData();
+        }
+
+        private void comboBoxPriviazka_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            textBoxPriviazka.Text = comboBoxPriviazka.Text;
         }
 
         

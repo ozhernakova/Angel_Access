@@ -1,0 +1,13 @@
+H:\OLYA\mulev\Angel_Access\Angel_Access\bin\Release\Angel_Access.exe.config
+H:\OLYA\mulev\Angel_Access\Angel_Access\bin\Release\Angel_Access.exe.manifest
+H:\OLYA\mulev\Angel_Access\Angel_Access\bin\Release\Angel_Access.application
+H:\OLYA\mulev\Angel_Access\Angel_Access\bin\Release\Angel_Access.exe
+H:\OLYA\mulev\Angel_Access\Angel_Access\bin\Release\Angel_Access.pdb
+H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Release\Angel_Access.csprojResolveAssemblyReference.cache
+H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Release\Angel_Access.Form1.resources
+H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Release\Angel_Access.Properties.Resources.resources
+H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Release\Angel_Access.csproj.GenerateResource.Cache
+H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Release\Angel_Access.exe.manifest
+H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Release\Angel_Access.application
+H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Release\Angel_Access.exe
+H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Release\Angel_Access.pdb

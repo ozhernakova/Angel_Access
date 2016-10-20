@@ -7,3 +7,7 @@ H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Debug\Angel_Access.Properties.Resour
 H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Debug\Angel_Access.csproj.GenerateResource.Cache
 H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Debug\Angel_Access.exe
 H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Debug\Angel_Access.pdb
+H:\OLYA\mulev\Angel_Access\Angel_Access\bin\Debug\Angel_Access.exe.manifest
+H:\OLYA\mulev\Angel_Access\Angel_Access\bin\Debug\Angel_Access.application
+H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Debug\Angel_Access.exe.manifest
+H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Debug\Angel_Access.application

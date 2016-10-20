@@ -42,22 +42,32 @@
             this.label5 = new System.Windows.Forms.Label();
             this.NumberOfVirabot = new System.Windows.Forms.Label();
             this.groupBoxRegion = new System.Windows.Forms.GroupBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.buttonRegion = new System.Windows.Forms.Button();
             this.groupBoxFromFile = new System.Windows.Forms.GroupBox();
             this.listViewZameri = new System.Windows.Forms.ListView();
             this.buttonUploadData = new System.Windows.Forms.Button();
             this.labelUploaded = new System.Windows.Forms.Label();
             this.groupBoxZamer = new System.Windows.Forms.GroupBox();
+            this.groupBoxVirabotka = new System.Windows.Forms.GroupBox();
+            this.comboBoxNapravlenie = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.comboBoxPriviazka = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.dataGridViewZamer = new System.Windows.Forms.DataGridView();
             this.labelZamer = new System.Windows.Forms.Label();
-            this.textBoxPriviazka = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.openFileDialogAccess = new System.Windows.Forms.OpenFileDialog();
             this.labelMissingBase = new System.Windows.Forms.Label();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.textBoxPriviazka = new System.Windows.Forms.TextBox();
+            this.labelHor = new System.Windows.Forms.Label();
+            this.labelReg = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.groupBoxRegion.SuspendLayout();
             this.groupBoxFromFile.SuspendLayout();
             this.groupBoxZamer.SuspendLayout();
+            this.groupBoxVirabotka.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewZamer)).BeginInit();
             this.SuspendLayout();
             // 
@@ -151,7 +161,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 65);
+            this.label5.Location = new System.Drawing.Point(12, 69);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(81, 17);
             this.label5.TabIndex = 10;
@@ -160,7 +170,7 @@
             // NumberOfVirabot
             // 
             this.NumberOfVirabot.AutoSize = true;
-            this.NumberOfVirabot.Location = new System.Drawing.Point(6, 277);
+            this.NumberOfVirabot.Location = new System.Drawing.Point(14, 274);
             this.NumberOfVirabot.MaximumSize = new System.Drawing.Size(270, 0);
             this.NumberOfVirabot.Name = "NumberOfVirabot";
             this.NumberOfVirabot.Size = new System.Drawing.Size(141, 17);
@@ -169,6 +179,7 @@
             // 
             // groupBoxRegion
             // 
+            this.groupBoxRegion.Controls.Add(this.button2);
             this.groupBoxRegion.Controls.Add(this.buttonRegion);
             this.groupBoxRegion.Controls.Add(this.NumberOfVirabot);
             this.groupBoxRegion.Controls.Add(this.label2);
@@ -181,6 +192,16 @@
             this.groupBoxRegion.TabIndex = 12;
             this.groupBoxRegion.TabStop = false;
             this.groupBoxRegion.Text = "Выбор района";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(9, 306);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(248, 42);
+            this.button2.TabIndex = 12;
+            this.button2.Text = "Запустить форму ПЭЗ_И для добавления выработок";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // buttonRegion
             // 
@@ -216,6 +237,8 @@
             this.listViewZameri.UseCompatibleStateImageBehavior = false;
             this.listViewZameri.View = System.Windows.Forms.View.Details;
             this.listViewZameri.SelectedIndexChanged += new System.EventHandler(this.listViewZameri_SelectedIndexChanged);
+            this.listViewZameri.Click += new System.EventHandler(this.listViewZameri_Click);
+            this.listViewZameri.KeyUp += new System.Windows.Forms.KeyEventHandler(this.listViewZameri_KeyUp);
             // 
             // buttonUploadData
             // 
@@ -240,23 +263,76 @@
             // groupBoxZamer
             // 
             this.groupBoxZamer.AutoSize = true;
-            this.groupBoxZamer.Controls.Add(this.comboBoxVirabotka);
-            this.groupBoxZamer.Controls.Add(this.label5);
-            this.groupBoxZamer.Controls.Add(this.label3);
-            this.groupBoxZamer.Controls.Add(this.comboBoxBlock);
-            this.groupBoxZamer.Controls.Add(this.label4);
-            this.groupBoxZamer.Controls.Add(this.comboBoxPodetag);
+            this.groupBoxZamer.Controls.Add(this.groupBoxVirabotka);
             this.groupBoxZamer.Controls.Add(this.button1);
             this.groupBoxZamer.Controls.Add(this.dataGridViewZamer);
             this.groupBoxZamer.Controls.Add(this.labelZamer);
-            this.groupBoxZamer.Controls.Add(this.textBoxPriviazka);
-            this.groupBoxZamer.Controls.Add(this.label7);
             this.groupBoxZamer.Location = new System.Drawing.Point(385, 29);
             this.groupBoxZamer.Name = "groupBoxZamer";
             this.groupBoxZamer.Size = new System.Drawing.Size(637, 954);
             this.groupBoxZamer.TabIndex = 16;
             this.groupBoxZamer.TabStop = false;
             this.groupBoxZamer.Text = "Привязка измерений по месту";
+            // 
+            // groupBoxVirabotka
+            // 
+            this.groupBoxVirabotka.Controls.Add(this.label9);
+            this.groupBoxVirabotka.Controls.Add(this.labelReg);
+            this.groupBoxVirabotka.Controls.Add(this.labelHor);
+            this.groupBoxVirabotka.Controls.Add(this.textBoxPriviazka);
+            this.groupBoxVirabotka.Controls.Add(this.comboBoxNapravlenie);
+            this.groupBoxVirabotka.Controls.Add(this.label6);
+            this.groupBoxVirabotka.Controls.Add(this.comboBoxPriviazka);
+            this.groupBoxVirabotka.Controls.Add(this.comboBoxVirabotka);
+            this.groupBoxVirabotka.Controls.Add(this.comboBoxBlock);
+            this.groupBoxVirabotka.Controls.Add(this.comboBoxPodetag);
+            this.groupBoxVirabotka.Controls.Add(this.label3);
+            this.groupBoxVirabotka.Controls.Add(this.label4);
+            this.groupBoxVirabotka.Controls.Add(this.label5);
+            this.groupBoxVirabotka.Controls.Add(this.label7);
+            this.groupBoxVirabotka.Location = new System.Drawing.Point(7, 22);
+            this.groupBoxVirabotka.Name = "groupBoxVirabotka";
+            this.groupBoxVirabotka.Size = new System.Drawing.Size(623, 349);
+            this.groupBoxVirabotka.TabIndex = 11;
+            this.groupBoxVirabotka.TabStop = false;
+            // 
+            // comboBoxNapravlenie
+            // 
+            this.comboBoxNapravlenie.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxNapravlenie.FormattingEnabled = true;
+            this.comboBoxNapravlenie.Location = new System.Drawing.Point(180, 319);
+            this.comboBoxNapravlenie.Name = "comboBoxNapravlenie";
+            this.comboBoxNapravlenie.Size = new System.Drawing.Size(162, 24);
+            this.comboBoxNapravlenie.TabIndex = 13;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(12, 322);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(97, 17);
+            this.label6.TabIndex = 12;
+            this.label6.Text = "Направление";
+            // 
+            // comboBoxPriviazka
+            // 
+            this.comboBoxPriviazka.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPriviazka.FormattingEnabled = true;
+            this.comboBoxPriviazka.Location = new System.Drawing.Point(180, 270);
+            this.comboBoxPriviazka.Name = "comboBoxPriviazka";
+            this.comboBoxPriviazka.Size = new System.Drawing.Size(293, 24);
+            this.comboBoxPriviazka.TabIndex = 11;
+            this.comboBoxPriviazka.SelectedIndexChanged += new System.EventHandler(this.comboBoxPriviazka_SelectedIndexChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(12, 257);
+            this.label7.MaximumSize = new System.Drawing.Size(150, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(138, 34);
+            this.label7.TabIndex = 2;
+            this.label7.Text = "Привязка замеров: (и тут подсказки)";
             // 
             // button1
             // 
@@ -292,24 +368,6 @@
             this.labelZamer.TabIndex = 4;
             this.labelZamer.Text = "Выбранные замеры (выберите в списке слева один или несколько)";
             // 
-            // textBoxPriviazka
-            // 
-            this.textBoxPriviazka.Location = new System.Drawing.Point(15, 295);
-            this.textBoxPriviazka.Multiline = true;
-            this.textBoxPriviazka.Name = "textBoxPriviazka";
-            this.textBoxPriviazka.Size = new System.Drawing.Size(591, 54);
-            this.textBoxPriviazka.TabIndex = 3;
-            this.textBoxPriviazka.Text = "Привязка места измерения в рамках выработки, блока и подэтажа, выбранных сверху";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 259);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(71, 17);
-            this.label7.TabIndex = 2;
-            this.label7.Text = "Привязка";
-            // 
             // openFileDialogAccess
             // 
             this.openFileDialogAccess.FileName = "PEZ_tbl";
@@ -322,6 +380,42 @@
             this.labelMissingBase.Name = "labelMissingBase";
             this.labelMissingBase.Size = new System.Drawing.Size(0, 17);
             this.labelMissingBase.TabIndex = 17;
+            // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            // 
+            // textBoxPriviazka
+            // 
+            this.textBoxPriviazka.Location = new System.Drawing.Point(180, 252);
+            this.textBoxPriviazka.Name = "textBoxPriviazka";
+            this.textBoxPriviazka.Size = new System.Drawing.Size(293, 22);
+            this.textBoxPriviazka.TabIndex = 14;
+            // 
+            // labelHor
+            // 
+            this.labelHor.AutoSize = true;
+            this.labelHor.Location = new System.Drawing.Point(250, 18);
+            this.labelHor.Name = "labelHor";
+            this.labelHor.Size = new System.Drawing.Size(0, 17);
+            this.labelHor.TabIndex = 17;
+            // 
+            // labelReg
+            // 
+            this.labelReg.AutoSize = true;
+            this.labelReg.Location = new System.Drawing.Point(370, 18);
+            this.labelReg.Name = "labelReg";
+            this.labelReg.Size = new System.Drawing.Size(0, 17);
+            this.labelReg.TabIndex = 18;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(12, 18);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(224, 17);
+            this.label9.TabIndex = 19;
+            this.label9.Text = "Выбранные горизонт и участок: ";
             // 
             // Form1
             // 
@@ -343,6 +437,8 @@
             this.groupBoxFromFile.PerformLayout();
             this.groupBoxZamer.ResumeLayout(false);
             this.groupBoxZamer.PerformLayout();
+            this.groupBoxVirabotka.ResumeLayout(false);
+            this.groupBoxVirabotka.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewZamer)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -373,10 +469,19 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.DataGridView dataGridViewZamer;
         private System.Windows.Forms.Label labelZamer;
-        private System.Windows.Forms.TextBox textBoxPriviazka;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.OpenFileDialog openFileDialogAccess;
         private System.Windows.Forms.Label labelMissingBase;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.GroupBox groupBoxVirabotka;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.ComboBox comboBoxNapravlenie;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox comboBoxPriviazka;
+        private System.Windows.Forms.TextBox textBoxPriviazka;
+        private System.Windows.Forms.Label labelHor;
+        private System.Windows.Forms.Label labelReg;
+        private System.Windows.Forms.Label label9;
     }
 }
 
