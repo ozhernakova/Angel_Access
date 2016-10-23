@@ -9,6 +9,7 @@ namespace Angel_Access
 {
     public struct AngelData
     {
+        //private List data;
         // 20 полей (в файле 21, но дату и время складываем в одно)
         public int Line { get; set; }
         public int Picket { get; set; }
@@ -30,6 +31,10 @@ namespace Angel_Access
         public string L8 { get; set; }
         public string L9 { get; set; }
         public string L10 { get; set; }
+
+        public List<string> getAsString(int index,bool value_in_quotes=true){
+            return new List<string>();   
+        }  
 
 
     }

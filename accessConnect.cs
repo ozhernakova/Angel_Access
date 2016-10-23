@@ -16,6 +16,7 @@ namespace Angel_Access
         public DataTable virabotki;
         public DataTable priviazki;
         public DataTable napravlenie;
+        //public DataTable porodi;
 
     
     }
@@ -41,13 +42,37 @@ namespace Angel_Access
 
             String my_query = @"INSERT INTO Angel_ПОКАЗАНИЯ Values(@id,@Замер,@Comp,@Time, @t, @A, @Lmin, @Lmax, @VarA,@B,@L1,@L2,@L3,@L4,@L5,@L6,@L7,@L8,@L9,@L10 )";
             String my_query1 = @"INSERT INTO Angel_ПОКАЗАНИЯ Values(@id,@Замер,@Comp,@Time, @t, @A, @Lmin, @Lmax, @VarA,@B,@L1,@L2,@L3,@L4,@L5,@L6,@L7,@L8,@L9,@L10 )";
-            
+          
+            // определяем номер выработки? 
+      
+            EnumerableRowCollection<DataRow> query1 = from order in dtd.virabotki.AsEnumerable()
+                                                      where order.Field<String>("Выработка") == param[3] && order.Field<String>("Подэтаж") == param[5] && order.Field<String>("Блок") == param[4]
+                                                      select order;
+            List<DataRow> res = query1.ToList();
+            int idVirabotka = res[0].Field<int>("Выработка.id");
+            int idHorizont = res[0].Field<int>("Горизонт.id");
+
+            // определяем номер направления
+            EnumerableRowCollection<DataRow> query2 = from order1 in dtd.napravlenie.AsEnumerable()
+                                                      where order1.Field<String>("Направление") == param[7]
+                                                      select order1;
+            res = query2.ToList();
+            //int idNapravlenie = res[0].Field<int>("id");
+            int idNapravlenie = 6;   
+
+   
+ 
             try
             {
                 using (OleDbConnection conn = new OleDbConnection(strCon))
-                {
-                    OleDbCommand cmd = new OleDbCommand(my_query,conn);
+                {   
                     conn.Open();
+                    // либо находим, либо дописываем запись в таблицу Центр
+                    int idCenter = centre(conn, idVirabotka, param[6], idNapravlenie); // породу нужно спрашивать..
+
+  
+                    OleDbCommand cmd = new OleDbCommand(my_query,conn);
+                    
                     int i=10;
                     
                     foreach (AngelData ad in adl)
@@ -85,6 +110,36 @@ namespace Angel_Access
         
         }
 
+        private int centre(OleDbConnection conn, int idVirabotka, string Priviazka, int idNapravlenie, int Poroda = 1) 
+        {
+            // нужно записать данные в таблицу Центр и Замер        
+            // проверяем, есть ли такая запись в таблице Центр
+            String checkCenter = @"SELECT Центр.id FROM Центр where Центр.Выработка = " + idVirabotka + " AND Центр.Привязка ='" + Priviazka + "' AND Центр.Направление =" + idNapravlenie;
+            String insertCenter = @"Insert into Центр ([Выработка], [Привязка], [Направление], [Порода]) Values ('" + idVirabotka + "', '" + Priviazka + "','" + idNapravlenie + "','" + 1 + "')";
+            int idCenter = -1;
+
+            try
+            {
+
+                OleDbCommand cmdCheckCenter = new OleDbCommand(checkCenter, conn);
+                object tmp = cmdCheckCenter.ExecuteScalar();
+                if (tmp == null) //  не нашли такую запись
+                {
+                    cmdCheckCenter = new OleDbCommand("SELECT @@IDENTITY", conn);  //http://www.mikesdotnetting.com/article/54/getting-the-identity-of-the-most-recently-added-record
+                    idCenter = (int)cmdCheckCenter.ExecuteScalar();
+                    OleDbCommand cmdInsertCenter = new OleDbCommand(insertCenter, conn);
+                    cmdInsertCenter.ExecuteNonQuery();
+                }
+                else idCenter = (int)tmp;
+
+            }
+            catch (Exception ex)
+            { Console.WriteLine(ex.Message); }
+
+            return idCenter;
+         
+        }
+
          private void LoadPosition()
         {
              // строка соединения с базой из которой берем горизонты и пр - и ничего не пишем
@@ -110,12 +165,17 @@ namespace Angel_Access
                     dtd.napravlenie = new DataTable();
                     adapter.Fill(dtd.napravlenie);
 
-                    strSql = @"SELECT DISTINCT Выработка.Выработка, Центр.Привязка
+                    strSql = @"SELECT DISTINCT Выработка.Выработка, Центр.Привязка 
                     FROM Выработка INNER JOIN Центр ON Выработка.id = Центр.Выработка
                     ORDER BY Выработка.Выработка";
                     adapter = new OleDbDataAdapter(new OleDbCommand(strSql, conn));
                     dtd.priviazki = new DataTable();
                     adapter.Fill(dtd.priviazki);
+
+                    //strSql = @"SELECT * from Порода";
+                    //adapter = new OleDbDataAdapter(new OleDbCommand(strSql, conn));
+                    //dtd.porodi = new DataTable();
+                    //adapter.Fill(dtd.porodi);
                     
                 }     
             }
@@ -136,9 +196,9 @@ namespace Angel_Access
 //WHERE (([Горизонт].[Горизонт]=" + hor + ") AND ([Участок].[Участок]='" + reg + "'))";          
 
 // запрос без привязок - с уникальными выработками
-string strSql = @"SELECT Выработка.id, Выработка.Выработка, Горизонт.Горизонт, Подэтаж.Подэтаж, Участок.Участок, Блок.Блок
+             string strSql = @"SELECT Выработка.id, Выработка.Выработка, Горизонт.id, Горизонт.Горизонт, Подэтаж.id, Подэтаж.Подэтаж, Участок.id, Участок.Участок, Блок.id, Блок.Блок
 FROM Горизонт INNER JOIN (Участок INNER JOIN (Блок INNER JOIN (Подэтаж INNER JOIN Выработка ON Подэтаж.id = Выработка.Подэтаж) ON Блок.id = Выработка.Блок) ON Участок.id = Выработка.Участок) ON Горизонт.id = Выработка.Горизонт
-WHERE (((Горизонт.Горизонт)="+hor+") AND ((Участок.Участок)='"+reg+"'))";           
+WHERE (((Горизонт.Горизонт)=" +hor+") AND ((Участок.Участок)='"+reg+"'))";           
 
              string strCon = strConPosition; 
 

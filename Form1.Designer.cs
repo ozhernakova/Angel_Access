@@ -50,6 +50,10 @@
             this.labelUploaded = new System.Windows.Forms.Label();
             this.groupBoxZamer = new System.Windows.Forms.GroupBox();
             this.groupBoxVirabotka = new System.Windows.Forms.GroupBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.labelReg = new System.Windows.Forms.Label();
+            this.labelHor = new System.Windows.Forms.Label();
+            this.textBoxPriviazka = new System.Windows.Forms.TextBox();
             this.comboBoxNapravlenie = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.comboBoxPriviazka = new System.Windows.Forms.ComboBox();
@@ -60,10 +64,6 @@
             this.openFileDialogAccess = new System.Windows.Forms.OpenFileDialog();
             this.labelMissingBase = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.textBoxPriviazka = new System.Windows.Forms.TextBox();
-            this.labelHor = new System.Windows.Forms.Label();
-            this.labelReg = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.groupBoxRegion.SuspendLayout();
             this.groupBoxFromFile.SuspendLayout();
             this.groupBoxZamer.SuspendLayout();
@@ -296,6 +296,38 @@
             this.groupBoxVirabotka.TabIndex = 11;
             this.groupBoxVirabotka.TabStop = false;
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(12, 18);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(224, 17);
+            this.label9.TabIndex = 19;
+            this.label9.Text = "Выбранные горизонт и участок: ";
+            // 
+            // labelReg
+            // 
+            this.labelReg.AutoSize = true;
+            this.labelReg.Location = new System.Drawing.Point(370, 18);
+            this.labelReg.Name = "labelReg";
+            this.labelReg.Size = new System.Drawing.Size(0, 17);
+            this.labelReg.TabIndex = 18;
+            // 
+            // labelHor
+            // 
+            this.labelHor.AutoSize = true;
+            this.labelHor.Location = new System.Drawing.Point(250, 18);
+            this.labelHor.Name = "labelHor";
+            this.labelHor.Size = new System.Drawing.Size(0, 17);
+            this.labelHor.TabIndex = 17;
+            // 
+            // textBoxPriviazka
+            // 
+            this.textBoxPriviazka.Location = new System.Drawing.Point(180, 252);
+            this.textBoxPriviazka.Name = "textBoxPriviazka";
+            this.textBoxPriviazka.Size = new System.Drawing.Size(293, 22);
+            this.textBoxPriviazka.TabIndex = 14;
+            // 
             // comboBoxNapravlenie
             // 
             this.comboBoxNapravlenie.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -384,38 +416,6 @@
             // backgroundWorker1
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
-            // 
-            // textBoxPriviazka
-            // 
-            this.textBoxPriviazka.Location = new System.Drawing.Point(180, 252);
-            this.textBoxPriviazka.Name = "textBoxPriviazka";
-            this.textBoxPriviazka.Size = new System.Drawing.Size(293, 22);
-            this.textBoxPriviazka.TabIndex = 14;
-            // 
-            // labelHor
-            // 
-            this.labelHor.AutoSize = true;
-            this.labelHor.Location = new System.Drawing.Point(250, 18);
-            this.labelHor.Name = "labelHor";
-            this.labelHor.Size = new System.Drawing.Size(0, 17);
-            this.labelHor.TabIndex = 17;
-            // 
-            // labelReg
-            // 
-            this.labelReg.AutoSize = true;
-            this.labelReg.Location = new System.Drawing.Point(370, 18);
-            this.labelReg.Name = "labelReg";
-            this.labelReg.Size = new System.Drawing.Size(0, 17);
-            this.labelReg.TabIndex = 18;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(12, 18);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(224, 17);
-            this.label9.TabIndex = 19;
-            this.label9.Text = "Выбранные горизонт и участок: ";
             // 
             // Form1
             // 
