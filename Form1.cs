@@ -280,15 +280,10 @@ namespace Angel_Access
             }
 
             this.listViewZameri.HeaderStyle = ColumnHeaderStyle.Nonclickable;
-            
+       
+        }
+
         
-        }
-
-        private void comboBoxRegion_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            horizonQuery();
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             // проверить что данные есть
@@ -306,7 +301,8 @@ namespace Angel_Access
 
             if (result == DialogResult.OK) 
             {
-                 aC.SaveAngel(chozenZameri, param);
+                if (aC.SaveAngel(chozenZameri, param)) MessageBox.Show ("Записали!");
+                else MessageBox.Show("Запись не удалась");
             }
         }
 

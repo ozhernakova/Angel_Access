@@ -9,7 +9,6 @@ namespace Angel_Access
 {
     public struct AngelData
     {
-        //private List data;
         // 20 полей (в файле 21, но дату и время складываем в одно)
         public int Line { get; set; }
         public int Picket { get; set; }
@@ -32,43 +31,18 @@ namespace Angel_Access
         public string L9 { get; set; }
         public string L10 { get; set; }
 
-        public List<string> getAsString(int index,bool value_in_quotes=true){
-            return new List<string>();   
+        public string getAsString(){
+            return string.Format(@"{0},{1}, {2}, '{3}', {4},  '{5}', '{6}', '{7}','{8}', '{9}', '{10}', '{11}','{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}'", Line, Picket, Comp, Dt, t, A, Lmin, Lmax, VarA, B, L1, L2, L3, L4, L5, L6, L7, L8, L9, L10);   
         }  
 
-
     }
-    //public struct AngelData
-    //{
-    //    // 19 полей
-    //    public int Line { get; set; }
-    //    public int Picket { get; set; }
-    //    public int Comp { get; set; }
-    //    public int t { get; set; }
-    //    public string A { get; set; }
-    //    public string Lmin { get; set; }
-    //    public string Lmax { get; set; }
-    //    public string VarA { get; set; }
-    //    public string B { get; set; }
-    //    public string L1 { get; set; }
-    //    public string L2 { get; set; }
-    //    public string L3 { get; set; }
-    //    public string L4 { get; set; }
-    //    public string L5 { get; set; }
-    //    public string L6 { get; set; }
-    //    public string L7 { get; set; }
-    //    public string L8 { get; set; }
-    //    public string L9 { get; set; }
-    //    public string L10 { get; set; }
 
-       
-    //}
 
     public class Zamer 
     {
-        public string Virabotka { get; set; }
-        public string Priviazka { get; set; }
-        public DateTime dt { get; set; }
+     //   public string Virabotka { get; set; }
+     //   public string Priviazka { get; set; }
+     //   public DateTime dt { get; set; }
         public int Line { get; set; }
         public int Picket { get; set; }
     }
@@ -139,18 +113,12 @@ namespace Angel_Access
                 // добавляем элемент в ListView
                         lvi_list.Add (lvi);
 
-
                     }
-                        
-
+ 
                     zd[i].odinZamer.Add(adl[j]); 
-                    
                     
                 }
                 return i+1;  // число штук, а не номер последнего
-          
-               
-           
         
         }
 
