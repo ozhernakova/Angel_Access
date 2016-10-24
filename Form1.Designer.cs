@@ -63,7 +63,6 @@
             this.labelZamer = new System.Windows.Forms.Label();
             this.openFileDialogAccess = new System.Windows.Forms.OpenFileDialog();
             this.labelMissingBase = new System.Windows.Forms.Label();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.groupBoxRegion.SuspendLayout();
             this.groupBoxFromFile.SuspendLayout();
             this.groupBoxZamer.SuspendLayout();
@@ -362,9 +361,9 @@
             this.label7.Location = new System.Drawing.Point(12, 257);
             this.label7.MaximumSize = new System.Drawing.Size(150, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(138, 34);
+            this.label7.Size = new System.Drawing.Size(148, 34);
             this.label7.TabIndex = 2;
-            this.label7.Text = "Привязка замеров: (и тут подсказки)";
+            this.label7.Text = "Привязка замеров: (можно выбрать тут:)";
             // 
             // button1
             // 
@@ -412,10 +411,6 @@
             this.labelMissingBase.Name = "labelMissingBase";
             this.labelMissingBase.Size = new System.Drawing.Size(0, 17);
             this.labelMissingBase.TabIndex = 17;
-            // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             // 
             // Form1
             // 
@@ -474,7 +469,6 @@
         private System.Windows.Forms.Label labelMissingBase;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.GroupBox groupBoxVirabotka;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.ComboBox comboBoxNapravlenie;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox comboBoxPriviazka;

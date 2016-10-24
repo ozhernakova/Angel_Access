@@ -71,17 +71,11 @@ namespace Angel_Access
             comboBoxHorizont.DisplayMember = "Горизонт";
             comboBoxRegion.DataSource = aC.dtd.regions;
             comboBoxRegion.DisplayMember = "Участок";
-          
             comboBoxNapravlenie.DataSource = aC.dtd.napravlenie;
             comboBoxNapravlenie.DisplayMember = "Направление";
-  
         }
 
-        void comboBoxes_Clear() 
-        {
-            
-        }
-    
+  
 
         private void buttonRegion_Click(object sender, EventArgs e)
         {
@@ -98,24 +92,14 @@ namespace Angel_Access
 
             if (lineNumber > 0)
             {
-
                 comboBoxVirabotka.DataSource = aC.dtd.virabotki;
                 comboBoxVirabotka.DisplayMember = "Выработка";
                 groupBoxVirabotka.Visible = true;
                 fillComboBox();
-
                 labelHor.Text = "Выработки для горизонта " + comboBoxHorizont.Text + " и участка " + comboBoxRegion.Text;
-
-                //MessageBox.Show("выбрана выработка1" + comboBoxVirabotka.Text);
-
                 this.comboBoxVirabotka.SelectedIndexChanged += new System.EventHandler(this.comboBoxVirabotka_SelectedIndexChanged);
-
-             //   this.comboBoxHorizont.SelectedIndexChanged += new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
-             //   this.comboBoxRegion.SelectedIndexChanged += new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
                 labelHor.Text = comboBoxHorizont.Text;
                 labelReg.Text = comboBoxRegion.Text;
-
-
             }
 
             else
@@ -124,17 +108,9 @@ namespace Angel_Access
                 comboBoxPriviazka.Text = "";
                 labelHor.Text = "";
                 labelReg.Text = "";
-              //  groupBoxVirabotka.Visible = false;
                 this.comboBoxVirabotka.SelectedIndexChanged -= this.comboBoxVirabotka_SelectedIndexChanged;
-             //   this.comboBoxHorizont.SelectedIndexChanged -= new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
-             //   this.comboBoxRegion.SelectedIndexChanged -= new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
                 MessageBox.Show(@"в базе не найдены выработки для горизонта  " + comboBoxHorizont.Text + " и участка " + comboBoxRegion.Text + "\n" + "Добавить новую выработку в базу можно только через форму ПЭЗ_И.accdb", "Выработки не найдены", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                
-
             }
-
- 
-        
         }
 
         void fillComboBox() 
@@ -165,7 +141,6 @@ namespace Angel_Access
             comboBoxPriviazka.DisplayMember = "Привязка";
 
             textBoxPriviazka.Text = "";
-
             
         }
 
@@ -295,12 +270,13 @@ namespace Angel_Access
 
             string[] param = new string[] {num.ToString(), labelHor.Text, labelReg.Text, comboBoxVirabotka.Text, comboBoxBlock.Text, comboBoxPodetag.Text, textBoxPriviazka.Text, comboBoxNapravlenie.Text };
             string tmp = 
-                string.Format("Записываем в базу все выбранные замеры. Их выбрано: {0} \n Измерения были проведены в следующем месте: \n Горизонт: {1} \n Участок: {2} \n Выработка: {3} \n Блок: {4} \n Подэтаж: {5} \n Привязка: {6} \n Направление: {7}", param);
+                string.Format("Записываем в базу все выбранные замеры. Количество записей: {0} \n Измерения были проведены в следующем месте: \n Горизонт: {1} \n Участок: {2} \n Выработка: {3} \n Блок: {4} \n Подэтаж: {5} \n Привязка: {6} \n Направление: {7}", param);
         
             DialogResult result = MessageBox.Show(tmp, "Подтвердите!", MessageBoxButtons.OKCancel);
 
             if (result == DialogResult.OK) 
             {
+                // проверяем таблицу Центр и уточняем породу если требуется
                 if (aC.SaveAngel(chozenZameri, param)) MessageBox.Show ("Записали!");
                 else MessageBox.Show("Запись не удалась");
             }
@@ -339,7 +315,6 @@ namespace Angel_Access
         {
             textBoxPriviazka.Text = comboBoxPriviazka.Text;
         }
-
         
     }
 }

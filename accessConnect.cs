@@ -17,16 +17,45 @@ namespace Angel_Access
         public DataTable priviazki;
         public DataTable napravlenie;
         public DataTable porodi;
-        public int idPribor;
+        public int idPribor; 
+        public int idVirabotka;
+        public int idHorizont;
+        public int idNapravlenie;
+        public int idPoroda=1;
 
-    
+        public void setVirabotkaHorizont(string Virabotka, string Block, string Podetag, string Napravlenie)
+        {
+             // определяем номер выработки и горизонта по имени 
+            EnumerableRowCollection<DataRow> query1 = from order in virabotki.AsEnumerable()
+                                                      where order.Field<String>("Выработка") == Virabotka && order.Field<String>("Подэтаж") == Podetag && order.Field<String>("Блок") == Block
+                                                      select order;
+            List<DataRow> res = query1.ToList();
+            idVirabotka = res[0].Field<int>("Выработка.id");
+            idHorizont = res[0].Field<int>("Горизонт.id");
+
+            // определяем номер направления
+            EnumerableRowCollection<DataRow> query2 = from order in napravlenie.AsEnumerable()
+                                                      where order.Field<String>("Направление") == Napravlenie
+                                                      select order;
+            res = query2.ToList();
+            idNapravlenie = res[0].Field<Byte>("id"); 
+        }
+        public void setidPoroda(string Poroda) 
+        {
+            EnumerableRowCollection<DataRow> query1 = from order in porodi.AsEnumerable()
+                                                      where order.Field<String>("Порода") == Poroda
+                                                      select order;
+            List<DataRow> res = query1.ToList();
+            idPoroda = res[0].Field<int>("id");
+        }
+   
     }
     class accessConnect
     {
         string strConPosition ; 
         string strConAngel; // строка соединения с базой, из которой читаем и пишем данные прибора
-        
         public dataToDisplay dtd = new dataToDisplay();
+        
 
         public accessConnect (string path)
         {
@@ -40,20 +69,9 @@ namespace Angel_Access
         {
           string strCon = strConAngel;
           bool result = false;
-            // определяем номер выработки по ее имени 
-            EnumerableRowCollection<DataRow> query1 = from order in dtd.virabotki.AsEnumerable()
-                                                      where order.Field<String>("Выработка") == param[3] && order.Field<String>("Подэтаж") == param[5] && order.Field<String>("Блок") == param[4]
-                                                      select order;
-            List<DataRow> res = query1.ToList();
-            int idVirabotka = res[0].Field<int>("Выработка.id");
-            int idHorizont = res[0].Field<int>("Горизонт.id");
-
-            // определяем номер направления
-            EnumerableRowCollection<DataRow> query2 = from order in dtd.napravlenie.AsEnumerable()
-                                                      where order.Field<String>("Направление") == param[7]
-                                                      select order;
-            res = query2.ToList();
-            int idNapravlenie = res[0].Field<Byte>("id"); 
+            // определяем id параметров места по их именам 
+           dtd.setVirabotkaHorizont(param[3],param[4],param[5],param[7] );
+           
 
             try
             {
@@ -61,7 +79,7 @@ namespace Angel_Access
                 {   
                     conn.Open();
                     // либо находим, либо дописываем запись в таблицу Центр
-                    int idCenter = get_centre(conn, idVirabotka, param[6], idNapravlenie); // породу нужно спрашивать..
+                    int idCenter = get_centre(conn, param[3], dtd.idVirabotka, param[6], param[7], dtd.idNapravlenie); // породу нужно спрашивать..
                     if (idCenter == -1) return result; 
                         // todo - генерируем ошибку;
                     int idZamer = get_zamer(conn, idCenter, adl[0].Dt, dtd.idPribor, 1); 
@@ -69,8 +87,6 @@ namespace Angel_Access
                     
                     foreach (AngelData ad in adl)
                     {
-                        string tmp1 = ad.getAsString();
-                        Console.WriteLine(tmp1);
                         String my_query1 = @"INSERT INTO Angel_ПОКАЗАНИЯ (Замер,Line, Picket, [Comp],[Time], t, A, Lmin, Lmax, VarA, B, L1, L2, L3, L4, L5, L6,L7,L8,L9,L10) Values (" + idZamer+ ","+ ad.getAsString()+")";
                         OleDbCommand cmd = new OleDbCommand(my_query1, conn);
                         cmd.ExecuteNonQuery();   
@@ -111,6 +127,7 @@ namespace Angel_Access
             return idZamer;
         }
 
+        
         /// <summary>
         /// Программа определяет строку в таблице Центр, если измерения проводятся в том же месте, направлении и с тем же описанием, или создает новую запись
         /// </summary>
@@ -120,13 +137,12 @@ namespace Angel_Access
         /// <param name="idNapravlenie">направление -?</param>
         /// <param name="Poroda">Порода в месте измерения</param>
         /// <returns>идентификатор записи в базе Центр, соответствующий данным параметрам</returns>
-        private int get_centre(OleDbConnection conn, int idVirabotka, string Priviazka, int idNapravlenie, int Poroda = 1) 
+        private int get_centre(OleDbConnection conn, string Virabotka, int idVirabotka, string Priviazka, string Napravlenie, int idNapravlenie) 
         {
             // нужно записать данные в таблицу Центр и Замер        
             // проверяем, есть ли такая запись в таблице Центр
 
             String checkCenter = @"SELECT Центр.id FROM Центр where Центр.Выработка = " + idVirabotka + " AND Центр.Привязка ='" + Priviazka + "' AND Центр.Направление =" + idNapravlenie;
-            String insertCenter = @"Insert into Центр ([Выработка], [Привязка], [Направление], [Порода]) Values ('" + idVirabotka + "', '" + Priviazka + "','" + idNapravlenie + "','" + 1 + "')";
             int idCenter = -1;
 
             try
@@ -136,11 +152,16 @@ namespace Angel_Access
                 object tmp = cmdCheckCenter.ExecuteScalar();
                 if (tmp == null) //  не нашли такую запись
                 {
+                    // и нужно запустить окно для выбора породы
+                    askPoroda Cdialog = new askPoroda(Virabotka, Priviazka, Napravlenie, dtd);
+                    Cdialog.ShowDialog();
+                    String insertCenter = @"Insert into Центр ([Выработка], [Привязка], [Направление], [Порода]) Values ('" + idVirabotka + "', '" + Priviazka + "','" + idNapravlenie + "','" + dtd.idPoroda + "')";
 
                     OleDbCommand cmdInsertCenter = new OleDbCommand(insertCenter, conn);
                     cmdInsertCenter.ExecuteNonQuery();
                     cmdCheckCenter = new OleDbCommand("SELECT @@IDENTITY", conn);  //http://www.mikesdotnetting.com/article/54/getting-the-identity-of-the-most-recently-added-record
                     idCenter = (int)cmdCheckCenter.ExecuteScalar();
+                    
                 }
                 else idCenter = (int)tmp;
 
