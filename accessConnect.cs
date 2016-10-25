@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.OleDb;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Angel_Access
 {
@@ -21,7 +21,8 @@ namespace Angel_Access
         public int idVirabotka;
         public int idHorizont;
         public int idNapravlenie;
-        public int idPoroda=1;
+        public int idPoroda;
+        //public int idCenter;
 
         public void setVirabotkaHorizont(string Virabotka, string Block, string Podetag, string Napravlenie)
         {
@@ -52,16 +53,16 @@ namespace Angel_Access
     }
     class accessConnect
     {
-        string strConPosition ; 
-        string strConAngel; // строка соединения с базой, из которой читаем и пишем данные прибора
+        string strConPosition; // строка соединения с базой, в которой лежат таблицы с выработками, горизонтами и пр
+        string strConAngel;    // строка соединения с базой, из которой читаем и пишем данные прибора
         public dataToDisplay dtd = new dataToDisplay();
         
 
         public accessConnect (string path)
         {
             strConPosition = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source="+path; //   H:\\OLYA\\mulev\\PEZ\\PEZ_tbl.accdb
-            string tmp = System.IO.Path.GetDirectoryName(path) + "\\PEZ-angel.accdb";
-            strConAngel = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + tmp;//H:\\OLYA\\mulev\\PEZ\\PEZ-angel.accdb";//
+            strConAngel = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + System.IO.Path.GetDirectoryName(path) + "\\PEZ-angel.accdb"; 
+            
             LoadPosition();
         }
 
@@ -95,7 +96,7 @@ namespace Angel_Access
                 }
             }
             catch (Exception ex)
-            { Console.WriteLine(ex.Message);}
+            { Console.WriteLine(ex.Message); MessageBox.Show(ex.Message); }
                 // todo генерируем ошибку;}
            return result;
         }
@@ -122,12 +123,20 @@ namespace Angel_Access
                 idZamer = (int)cmd.ExecuteScalar();
             }
             catch (Exception ex)
-            { Console.WriteLine(ex.Message); }
+            { Console.WriteLine(ex.Message);
+            MessageBox.Show(ex.Message);
+            }
 
             return idZamer;
         }
 
+        public void setAllids(string [] param)
+        {
+            // определяем id параметров места по их именам 
+            dtd.setVirabotkaHorizont(param[3], param[4], param[5], param[7]);
+            // щпределяем id pf
         
+        }
         /// <summary>
         /// Программа определяет строку в таблице Центр, если измерения проводятся в том же месте, направлении и с тем же описанием, или создает новую запись
         /// </summary>
@@ -167,7 +176,9 @@ namespace Angel_Access
 
             }
             catch (Exception ex)
-            { Console.WriteLine(ex.Message); }
+            { Console.WriteLine(ex.Message);
+            MessageBox.Show(ex.Message);
+            }
 
             return idCenter;
          
@@ -238,7 +249,7 @@ namespace Angel_Access
             }
             catch (Exception ex)
             {
-                
+                MessageBox.Show(ex.Message);
                 Console.WriteLine(ex.Message);
             }
         }
@@ -275,6 +286,7 @@ WHERE (((Горизонт.Горизонт)=" +hor+") AND ((Участок.Уч�
              {
 
                  Console.WriteLine(ex.Message);
+                 MessageBox.Show(ex.Message);
                  return -1;
              }
         

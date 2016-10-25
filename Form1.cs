@@ -7,7 +7,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
@@ -26,14 +25,13 @@ namespace Angel_Access
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // размещаем форму повыше - чтобы лучше помещалась
+            this.Location = new System.Drawing.Point(50, 1);
+            // выделяем место под данные, которые отображаем
             aDL = new AngelDataList();
-            openFileDialogAccess.Filter = "Таблица с данными PEZ_tbl |*.accdb| файлы Access (*.accdb)|*.accdb";
-            openFileDialogAccess.InitialDirectory = Application.StartupPath; 
-          
-            // TODO: проверить связь с базой акцесса. Если нет - предложить выбрать путь к ней.
 
+            // проверяем связь с базой акцесса PEZ_tbl. Если нет - нужно выбрать путь к ней и запомнить его в установках.
             string path = Properties.Settings.Default.path;
-           
             if (File.Exists(path)) 
             {
                 aC = new accessConnect(path);
@@ -41,24 +39,26 @@ namespace Angel_Access
             }
             else 
             {
-                if (openFileDialogAccess.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                openFileDialog1.Filter = "Таблица PEZ_tbl |*.accdb| базы Access(*.accdb)|*.accdb";
+                openFileDialog1.InitialDirectory = Application.StartupPath;
+                openFileDialog1.FileName = "PEZ_tbl";
+                if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    path = openFileDialogAccess.FileName;
+                    path = openFileDialog1.FileName;
                     aC = new accessConnect(path);
                     comboBoxes_Load();
                     Properties.Settings.Default.path = path;
                     Properties.Settings.Default.Save();
-
                 }
 
                  else
                 {
-                    labelMissingBase.Text = "путь к базе Access отсутствует. Нельзя определить место измерений, нельзя записать измерения в базу. Пожалуйста, найдите путь к таблице PEZ_tbl.accdb ";
+                    labelMissingBase.Text = "путь к базе Access отсутствует. Нельзя определить место измерений, нельзя записать измерения в базу. Пожалуйста, найдите путь к таблице PEZ_tbl.accdb и перезапустите программу. ";
                     button1.Visible = false;
                     comboBoxHorizont.DataSource = null;
                     comboBoxRegion.DataSource = null;
                     groupBoxRegion.Visible = false;
-                   
+                    groupBoxVirabotka.Visible = false;
                 }
                 
             }
@@ -159,6 +159,7 @@ namespace Angel_Access
                // Application.StartupPath;  // поставить текущую
             openFileDialog1.Filter = "txt  (*.txt)|*.txt|Все файлы (*.*)|*.*";
             openFileDialog1.FilterIndex = 1;
+            openFileDialog1.FileName = "";
             openFileDialog1.RestoreDirectory = true;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -188,7 +189,7 @@ namespace Angel_Access
                             counter++;
                         }
                         int i = aDL.zameri();
-                        labelUploaded.Text = labelUploaded.Text + " Выделено " + i + " отдельных замеров. ";
+                        labelUploaded.Text = labelUploaded.Text + " Найдено " + i + " отдельных замеров. ";
 
                     }
                                                       
@@ -207,10 +208,7 @@ namespace Angel_Access
             }
         }
 
-        
-        private void listViewZameri_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
+              
 
         private void updateSelectionData()
         {
@@ -277,6 +275,7 @@ namespace Angel_Access
             if (result == DialogResult.OK) 
             {
                 // проверяем таблицу Центр и уточняем породу если требуется
+                //aC.setAllids(param);
                 if (aC.SaveAngel(chozenZameri, param)) MessageBox.Show ("Записали!");
                 else MessageBox.Show("Запись не удалась");
             }

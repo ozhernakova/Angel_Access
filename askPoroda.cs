@@ -5,7 +5,6 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Angel_Access
@@ -26,6 +25,11 @@ namespace Angel_Access
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void buttonOK_Click(object sender, EventArgs e)
         {
             dtd.setidPoroda(comboBox1.Text);
         }

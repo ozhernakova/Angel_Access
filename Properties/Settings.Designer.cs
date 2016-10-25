@@ -23,16 +23,6 @@ namespace Angel_Access.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=H:\\OLYA\\mulev\\PEZ\\ПЭЗ_И.accdb")]
-        public string PES_I_ConnectionString {
-            get {
-                return ((string)(this["PES_I_ConnectionString"]));
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("H:\\OLYA\\mulev\\PEZ\\PEZ_tbl.accdb")]
