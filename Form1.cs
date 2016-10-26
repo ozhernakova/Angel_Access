@@ -31,7 +31,7 @@ namespace Angel_Access
             aDL = new AngelDataList();
 
             // проверяем связь с базой акцесса PEZ_tbl. Если нет - нужно выбрать путь к ней и запомнить его в установках.
-            string path = Properties.Settings.Default.path;
+            string path = Application.StartupPath + @"\PEZ_tbl.accdb";//Properties.Settings.Default.path;
             if (File.Exists(path)) 
             {
                 aC = new accessConnect(path);
@@ -47,8 +47,8 @@ namespace Angel_Access
                     path = openFileDialog1.FileName;
                     aC = new accessConnect(path);
                     comboBoxes_Load();
-                    Properties.Settings.Default.path = path;
-                    Properties.Settings.Default.Save();
+                   // Properties.Settings.Default.path = path;
+                   // Properties.Settings.Default.Save();
                 }
 
                  else
@@ -155,16 +155,16 @@ namespace Angel_Access
         {
             // загрузить файл с данными
             StreamReader file = null;
-            openFileDialog1.InitialDirectory = Properties.Settings.Default.angelpath;
-               // Application.StartupPath;  // поставить текущую
+            openFileDialog1.InitialDirectory = Application.StartupPath; //@"H:\OLYA\mulev\PEZ\PEZ_tbl.accdb";//Properties.Settings.Default.angelpath;
+               //   // поставить текущую
             openFileDialog1.Filter = "txt  (*.txt)|*.txt|Все файлы (*.*)|*.*";
             openFileDialog1.FilterIndex = 1;
             openFileDialog1.FileName = "";
             openFileDialog1.RestoreDirectory = true;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                Properties.Settings.Default.angelpath = Path.GetDirectoryName(openFileDialog1.FileName);
-                Properties.Settings.Default.Save();
+            //    Properties.Settings.Default.angelpath = Path.GetDirectoryName(openFileDialog1.FileName);
+             //   Properties.Settings.Default.Save();
                 try
                 {
                     if (( openFileDialog1.OpenFile()) != null)
@@ -284,7 +284,7 @@ namespace Angel_Access
         private void button2_Click(object sender, EventArgs e)
         {
             // запуск Access 
-            string pathtobase = Path.GetDirectoryName (Properties.Settings.Default.path);
+            string pathtobase = Path.GetDirectoryName (@"H:\OLYA\mulev\PEZ\PEZ_tbl.accdb");//Properties.Settings.Default.path
 
             Process.Start(pathtobase + "\\ПЭЗ_И.accdb");
 
@@ -314,6 +314,7 @@ namespace Angel_Access
         {
             textBoxPriviazka.Text = comboBoxPriviazka.Text;
         }
-        
+
+                
     }
 }

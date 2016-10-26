@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="path" Type="System.String" Scope="User">
-      <Value Profile="(Default)">H:\OLYA\mulev\PEZ\PEZ_tbl.accdb</Value>
+      <Value Profile="(Default)">"H:\OLYA\mulev\PEZ\PEZ_tbl.accdb"</Value>
     </Setting>
     <Setting Name="angelpath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">H:\OLYA\mulev\Angel</Value>
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>
