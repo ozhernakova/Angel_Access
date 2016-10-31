@@ -14,9 +14,10 @@ namespace Angel_Access
 {
     public partial class Form1 : Form
     {
-        accessConnect aC;
-        AngelDataList aDL;
+        AccessConnect baseConnection;
+        AngelDataList dataToDisplay;
         List <AngelData> chozenZameri;
+        string pathToAccess;  // путь к таблице с данными о выработках
         
         public Form1()
         {
@@ -25,16 +26,18 @@ namespace Angel_Access
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
+            pathToAccess = Properties.Settings.Default.path;
             // размещаем форму повыше - чтобы лучше помещалась
             this.Location = new System.Drawing.Point(50, 1);
             // выделяем место под данные, которые отображаем
-            aDL = new AngelDataList();
+            dataToDisplay = new AngelDataList();
 
             // проверяем связь с базой акцесса PEZ_tbl. Если нет - нужно выбрать путь к ней и запомнить его в установках.
-            string path = Application.StartupPath + @"\PEZ_tbl.accdb";//Properties.Settings.Default.path;
-            if (File.Exists(path)) 
+            // pathToAccess = Properties.Settings.Default.path;//Application.StartupPath;//
+            if (File.Exists(pathToAccess + AccessConnect.MAINTABLE)) 
             {
-                aC = new accessConnect(path);
+                baseConnection = new AccessConnect(pathToAccess);
                 comboBoxes_Load();
             }
             else 
@@ -44,35 +47,41 @@ namespace Angel_Access
                 openFileDialog1.FileName = "PEZ_tbl";
                 if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    path = openFileDialog1.FileName;
-                    aC = new accessConnect(path);
+                    pathToAccess = Path.GetDirectoryName(openFileDialog1.FileName);
+                    baseConnection = new AccessConnect(pathToAccess);
                     comboBoxes_Load();
-                   // Properties.Settings.Default.path = path;
-                   // Properties.Settings.Default.Save();
+                    Properties.Settings.Default.path = pathToAccess;
+                    Properties.Settings.Default.Save();
                 }
 
                  else
                 {
                     labelMissingBase.Text = "путь к базе Access отсутствует. Нельзя определить место измерений, нельзя записать измерения в базу. Пожалуйста, найдите путь к таблице PEZ_tbl.accdb и перезапустите программу. ";
-                    button1.Visible = false;
+                    btnWriteToBase.Visible = false;
                     comboBoxHorizont.DataSource = null;
                     comboBoxRegion.DataSource = null;
                     groupBoxRegion.Visible = false;
                     groupBoxVirabotka.Visible = false;
                 }
-                
+                           
+               
             }
-  
-       }
+            comboBoxPoroda.Visible = false;
+            labelPoroda.Visible = false;
+            //comboBoxNapravlenie.Visible = false;
+            //labelNapravlenie.Visible = false;
+        }
 
         void comboBoxes_Load() 
         {
-            comboBoxHorizont.DataSource = aC.dtd.horizons;
+            comboBoxHorizont.DataSource = baseConnection.dtd.horizons;
             comboBoxHorizont.DisplayMember = "Горизонт";
-            comboBoxRegion.DataSource = aC.dtd.regions;
+            comboBoxRegion.DataSource = baseConnection.dtd.regions;
             comboBoxRegion.DisplayMember = "Участок";
-            comboBoxNapravlenie.DataSource = aC.dtd.napravlenie;
+            comboBoxNapravlenie.DataSource = baseConnection.dtd.napravlenie;
             comboBoxNapravlenie.DisplayMember = "Направление";
+            comboBoxPoroda.DataSource = baseConnection.dtd.porodi;
+            comboBoxPoroda.DisplayMember = "Порода";
         }
 
   
@@ -85,14 +94,14 @@ namespace Angel_Access
         void horizonQuery() 
         {
             
-            int lineNumber = aC.virabotka(comboBoxHorizont.Text, comboBoxRegion.Text);
+            int lineNumber = baseConnection.virabotka(comboBoxHorizont.Text, comboBoxRegion.Text);
 
             NumberOfVirabot.Visible = true;
             NumberOfVirabot.Text = "Найдено выработок: " + lineNumber; 
 
             if (lineNumber > 0)
             {
-                comboBoxVirabotka.DataSource = aC.dtd.virabotki;
+                comboBoxVirabotka.DataSource = baseConnection.dtd.virabotki;
                 comboBoxVirabotka.DisplayMember = "Выработка";
                 groupBoxVirabotka.Visible = true;
                 fillComboBox();
@@ -118,7 +127,7 @@ namespace Angel_Access
             // Выборка запросом - см https://msdn.microsoft.com/ru-ru/library/bb669073(v=vs.110).aspx
             // про dataview http://www.c-sharpcorner.com/article/dataview-in-C-Sharp/
             // и http://csharp.net-informations.com/dataview/create-dataview.htm
-            EnumerableRowCollection<DataRow> query = from order in aC.dtd.virabotki.AsEnumerable()
+            EnumerableRowCollection<DataRow> query = from order in baseConnection.dtd.virabotki.AsEnumerable()
                                                      where order.Field<String>("Выработка") == comboBoxVirabotka.Text
                                                      select order;
 
@@ -132,14 +141,13 @@ namespace Angel_Access
 
             
             // для привязок - показываем варианты выбора (их можно редактировать) и готовим новое поле для нового варианта
-            EnumerableRowCollection<DataRow> query1 = from order in aC.dtd.priviazki.AsEnumerable()
+            EnumerableRowCollection<DataRow> query1 = from order in baseConnection.dtd.priviazki.AsEnumerable()
                                                      where order.Field<String>("Выработка") == comboBoxVirabotka.Text
                                                      select order;
             DataView view1 = query1.AsDataView();
 
             comboBoxPriviazka.DataSource = view1;
             comboBoxPriviazka.DisplayMember = "Привязка";
-
             textBoxPriviazka.Text = "";
             
         }
@@ -156,11 +164,11 @@ namespace Angel_Access
             // загрузить файл с данными
             StreamReader file = null;
             openFileDialog1.InitialDirectory = Application.StartupPath; //@"H:\OLYA\mulev\PEZ\PEZ_tbl.accdb";//Properties.Settings.Default.angelpath;
-               //   // поставить текущую
             openFileDialog1.Filter = "txt  (*.txt)|*.txt|Все файлы (*.*)|*.*";
             openFileDialog1.FilterIndex = 1;
             openFileDialog1.FileName = "";
             openFileDialog1.RestoreDirectory = true;
+
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
             //    Properties.Settings.Default.angelpath = Path.GetDirectoryName(openFileDialog1.FileName);
@@ -174,31 +182,27 @@ namespace Angel_Access
                         // зачистили контролы
                         
                         listViewZameri.Clear();
-                        aDL = new AngelDataList();
+                        dataToDisplay = new AngelDataList();
                         dataGridViewZamer.DataSource = null;
                         labelZamer.Text = "Выберите нужные замеры из списка";
                        
-
                         file = new StreamReader(openFileDialog1.FileName);
-                        int counter = 0;
+                       
                         string line;
                         while ((line = file.ReadLine()) != null)
                         {
-                           // System.Console.WriteLine(line);
-                            aDL.addAngelData(line);
-                            counter++;
+                            dataToDisplay.addAngelData(line);
                         }
-                        int i = aDL.zameri();
-                        labelUploaded.Text = labelUploaded.Text + " Найдено " + i + " отдельных замеров. ";
+                        dataToDisplay.divideIntoZameri();
 
                     }
                                                       
                     // добавляем элемент в ListView
-                    listViewZameri.Items.AddRange(aDL.lvi_list.ToArray());
+                    listViewZameri.Items.AddRange(dataToDisplay.lvi_list.ToArray());
                     // Create some column headers for the data. 
                     listViewZameriHeader();
-            
-                    
+                    labelUploaded.Text = labelUploaded.Text + " Выделено " + listViewZameri.Items.Count + " отдельных замеров. ";
+                   
                 }
                 catch (Exception ex)
                 {
@@ -228,8 +232,16 @@ namespace Angel_Access
 	        }
             if (choice.Count > 0) { 
            chozenZameri = new List<AngelData>();
-           chozenZameri = aDL.getchoosenZameri (ch.ToArray());
+           chozenZameri = dataToDisplay.collectSelectedZameri (ch.ToArray());
            dataGridViewZamer.DataSource = chozenZameri;}
+        }
+
+        void hideSelectedZameri() 
+        {
+            foreach (ListViewItem item in listViewZameri.SelectedItems)
+            {
+                listViewZameri.Items.Remove(item);
+            }
         }
 
         void listViewZameriHeader()
@@ -259,6 +271,9 @@ namespace Angel_Access
         
         private void button1_Click(object sender, EventArgs e)
         {
+            printAndsendToAccess();
+        }
+        void printAndsendToAccess(){
             // проверить что данные есть
             int num = dataGridViewZamer.RowCount;
             if (num < 1)
@@ -266,35 +281,45 @@ namespace Angel_Access
             if (textBoxPriviazka.Text == "")
                 { MessageBox.Show("Отсутствует привязка"); return; }
 
-            string[] param = new string[] {num.ToString(), labelHor.Text, labelReg.Text, comboBoxVirabotka.Text, comboBoxBlock.Text, comboBoxPodetag.Text, textBoxPriviazka.Text, comboBoxNapravlenie.Text };
-            string tmp = 
-                string.Format("Записываем в базу все выбранные замеры. Количество записей: {0} \n Измерения были проведены в следующем месте: \n Горизонт: {1} \n Участок: {2} \n Выработка: {3} \n Блок: {4} \n Подэтаж: {5} \n Привязка: {6} \n Направление: {7}", param);
+            string[] param = new string[] { num.ToString(), labelHor.Text, labelReg.Text, comboBoxVirabotka.Text, comboBoxBlock.Text, comboBoxPodetag.Text, textBoxPriviazka.Text, comboBoxNapravlenie.Text, listViewZameri.SelectedItems.Count.ToString() };
+            string tmp =
+                string.Format("Записываем в базу все выбранные замеры. \n \n Количество отдельных замеров {8}, общее количество записей: {0},  \n Измерения были проведены в следующем месте: \n Горизонт: {1} \n Участок: {2} \n Выработка: {3} \n Блок: {4} \n Подэтаж: {5} \n Привязка: {6} \n Направление: {7} ", param);
         
             DialogResult result = MessageBox.Show(tmp, "Подтвердите!", MessageBoxButtons.OKCancel);
 
             if (result == DialogResult.OK) 
             {
                 // проверяем таблицу Центр и уточняем породу если требуется
-                //aC.setAllids(param);
-                if (aC.SaveAngel(chozenZameri, param)) MessageBox.Show ("Записали!");
-                else MessageBox.Show("Запись не удалась");
+                baseConnection.setAllids(param);
+                if (baseConnection.check_Porodaid(param[6]) == -1)                     // и нужно запустить окно для выбора породы
+                {
+                    string question = string.Format("В параметрах места замера выбраны Выработка: {3}, Привязка: {6}, Направление: {7}. В базе данных не найдено такого сочетания параметров. Чтобы добавить этот центр измерений в базу, пожалуйста, уточните породу:", param);
+
+                    askPoroda Cdialog = new askPoroda(question, baseConnection.dtd);
+                    if ( Cdialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel) return;
+                }
+                if (baseConnection.SaveAngel(chozenZameri, param))
+                { 
+                    MessageBox.Show("Записали!");
+                    hideSelectedZameri();
+                    printingDialog();
+                }
+                else MessageBox.Show("Запись не удалась, поэтому на печать тоже не отправляли");
             }
+            
+
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             // запуск Access 
-            string pathtobase = Path.GetDirectoryName (@"H:\OLYA\mulev\PEZ\PEZ_tbl.accdb");//Properties.Settings.Default.path
+            string path = Path.GetDirectoryName (pathToAccess);//Properties.Settings.Default.path
 
-            Process.Start(pathtobase + "\\ПЭЗ_И.accdb");
-
-        }
-
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
+            Process.Start(path + AccessConnect.TABLETOADD);
 
         }
 
+        
         private void listViewZameri_KeyUp(object sender, KeyEventArgs e)
         {
 
@@ -313,6 +338,174 @@ namespace Angel_Access
         private void comboBoxPriviazka_SelectedIndexChanged(object sender, EventArgs e)
         {
             textBoxPriviazka.Text = comboBoxPriviazka.Text;
+        }
+
+        private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            
+
+            Graphics g = e.Graphics;
+
+            Font font = new Font("Courier New", 14); //must use a mono spaced font as the spaces need to line up
+
+            float fontHeight = font.GetHeight();
+
+            int startX = e.MarginBounds.X;
+            int endX = e.MarginBounds.Right;
+            int startY = e.MarginBounds.Y;
+            int offset = startY;
+            SolidBrush sb = new SolidBrush(Color.Black);
+            Pen pen = new Pen (sb);
+
+            Font fb = new Font("Courier New", 12, FontStyle.Bold);
+            Font fontSmall = new Font("Courier New", 10);
+            float fontSmallHeight = fontSmall.GetHeight();
+
+            // дата измерений - chozenZameri[0].Dt
+            g.DrawString(string.Format("Дата замера: {0:f}, прибор \"Ангел\" №_____", DateTime.Now), new Font("Courier New", 15), sb, startX, offset);
+            offset = offset + (int)fontHeight*2; 
+            g.DrawString("Участок: " + labelReg.Text, font, sb, startX, offset);
+            offset = offset + (int)fontHeight;  
+            g.DrawString("Горизонт: " + labelHor.Text + "  Блок № " + comboBoxBlock.Text, font, sb, startX, offset);
+            offset = offset + (int)fontHeight;  
+            g.DrawString("Выработка: " + comboBoxVirabotka.Text, font, sb, startX, offset);
+            offset = offset + (int)fontHeight;  
+            g.DrawString("Диаметр: 2,5  3,5 другой(_______________) ", font, sb, startX, offset);
+            offset = offset + (int)fontHeight;  
+            g.DrawString("Привязка: " + textBoxPriviazka.Text, font, sb, startX, offset);
+            offset = offset + (int)fontHeight;
+            string poroda = "n/a";
+            if (baseConnection.dtd.Poroda != null) poroda = baseConnection.dtd.Poroda;
+            g.DrawString("Порода: " +poroda , font, sb, startX, offset);
+            offset = offset + (int)fontHeight; 
+            g.DrawString("P норм, Ом/м _________Оператор ______________"  , font, sb, startX, offset);
+            offset = offset + (int)fontHeight*2; 
+
+    
+            Rectangle one = new Rectangle(startX, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Вдоль выработки", font, sb, one);
+            g.DrawRectangle(pen, one);
+
+            Rectangle two = new Rectangle(startX + e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Поперек выработки", font, sb, two);
+            g.DrawRectangle(pen, two);
+
+            Rectangle three = new Rectangle(startX + e.MarginBounds.Width / 2, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Вертикально", font, sb, three);
+            g.DrawRectangle(pen, three);
+
+            Rectangle four = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Категория удароопасности", fontSmall, sb, four);
+            g.DrawRectangle(pen, four);
+
+            offset = offset + (int)fontHeight * 2;
+
+            Rectangle five = new Rectangle(startX, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString(" normal", fontSmall, sb, five);
+            g.DrawRectangle(pen, five);
+
+            Rectangle six = new Rectangle(startX + e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString(" danger", fontSmall, sb, six);
+            g.DrawRectangle(pen, six);
+
+            Rectangle seven = new Rectangle(startX + e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString(" normal", fontSmall, sb, seven);
+            g.DrawRectangle(pen, seven);
+
+            Rectangle eight = new Rectangle(startX + 3 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString(" danger", fontSmall, sb, eight);
+            g.DrawRectangle(pen, eight);
+
+            Rectangle nine = new Rectangle(startX + e.MarginBounds.Width / 2, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString(" normal", fontSmall, sb, nine);
+            g.DrawRectangle(pen, nine);
+
+            Rectangle ten = new Rectangle(startX + 5 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString(" danger", fontSmall, sb, ten);
+            g.DrawRectangle(pen, ten);
+
+            Rectangle eleven = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
+            g.DrawRectangle(pen, eleven);
+
+            g.DrawLine(pen, new Point(startX, offset + (int)fontSmallHeight), new Point(endX, offset + (int)fontSmallHeight));
+            offset = offset + (int)fontHeight * 2;
+            Rectangle twelve = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
+            g.DrawString(" неопасно опасно", fontSmall, sb, twelve);
+            offset = offset + (int)fontHeight * 3;
+
+
+            //foreach (AngelData item in chozenZameri)
+            //{
+                //create the string to print on the reciept
+                //string productDescription = item;
+                //string productTotal = item.Substring(item.Length - 6, 6);
+                
+
+
+                //    graphic.DrawString(productLine, new Font("Courier New", 12, FontStyle.Italic), new SolidBrush(Color.Red), startX, startY + offset);
+
+                //    offset = offset + (int)fontHeight + 5; //make the spacing consistent
+                //}
+                //else
+                //{
+                //    string productLine = productDescription;
+
+                //    graphic.DrawString(productLine, font, new SolidBrush(Color.Black), startX, startY + offset);
+
+                //    offset = offset + (int)fontHeight + 5; //make the spacing consistent
+                //}
+
+           // }
+
+
+
+            ////when we have drawn all of the items add the total
+
+            //offset = offset + 20; //make some room so that the total stands out.
+
+            //graphic.DrawString("Total to pay ".PadRight(30) + String.Format("{0:c}", totalprice), new Font("Courier New", 12, FontStyle.Bold), new SolidBrush(Color.Black), startX, startY + offset);
+
+            //offset = offset + 30; //make some room so that the total stands out.
+            //graphic.DrawString("CASH ".PadRight(30) + String.Format("{0:c}", cash), font, new SolidBrush(Color.Black), startX, startY + offset);
+            //offset = offset + 15;
+            //graphic.DrawString("CHANGE ".PadRight(30) + String.Format("{0:c}", change), font, new SolidBrush(Color.Black), startX, startY + offset);
+            //offset = offset + 30; //make some room so that the total stands out.
+            //graphic.DrawString("     Thank-you for your custom,", font, new SolidBrush(Color.Black), startX, startY + offset);
+            //offset = offset + 15;
+            //graphic.DrawString("       please come back soon!", font, new SolidBrush(Color.Black), startX, startY + offset);
+            g.DrawLine(pen, new Point(startX, offset), new Point(endX, offset));
+            offset = offset + (int)fontHeight;
+
+            g.DrawString(string.Format("ш. Таштагольская, дата распечатки: {0:f} ", DateTime.Now), new Font("Courier New", 12, FontStyle.Italic), sb, startX, offset);
+  
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            printingDialog();
+        }
+        void printingDialog() 
+        {
+            PrintDialog pdi = new PrintDialog();
+            pdi.Document = printDocument1;
+            if (pdi.ShowDialog() == DialogResult.OK)
+            {
+                if (printPreviewDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    printDocument1.Print();
+                    MessageBox.Show("Отправлено на печать");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Печать отменена");
+            }
+        }
+
+        private void textBoxPriviazka_Validating(object sender, CancelEventArgs e)
+        {
+            // смотрим что там такое введено и проверяем таблицу с привязками - есть ли там такой вариант
+
         }
 
                 

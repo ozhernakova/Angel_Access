@@ -8,75 +8,36 @@ using System.Windows.Forms;
 
 namespace Angel_Access
 {
-    public class dataToDisplay
+  
+    class AccessConnect
     {
-
-        public DataTable horizons;
-        public DataTable regions;
-        public DataTable virabotki;
-        public DataTable priviazki;
-        public DataTable napravlenie;
-        public DataTable porodi;
-        public int idPribor; 
-        public int idVirabotka;
-        public int idHorizont;
-        public int idNapravlenie;
-        public int idPoroda;
-        //public int idCenter;
-
-        public void setVirabotkaHorizont(string Virabotka, string Block, string Podetag, string Napravlenie)
-        {
-             // определяем номер выработки и горизонта по имени 
-            EnumerableRowCollection<DataRow> query1 = from order in virabotki.AsEnumerable()
-                                                      where order.Field<String>("Выработка") == Virabotka && order.Field<String>("Подэтаж") == Podetag && order.Field<String>("Блок") == Block
-                                                      select order;
-            List<DataRow> res = query1.ToList();
-            idVirabotka = res[0].Field<int>("Выработка.id");
-            idHorizont = res[0].Field<int>("Горизонт.id");
-
-            // определяем номер направления
-            EnumerableRowCollection<DataRow> query2 = from order in napravlenie.AsEnumerable()
-                                                      where order.Field<String>("Направление") == Napravlenie
-                                                      select order;
-            res = query2.ToList();
-            idNapravlenie = res[0].Field<Byte>("id"); 
-        }
-        public void setidPoroda(string Poroda) 
-        {
-            EnumerableRowCollection<DataRow> query1 = from order in porodi.AsEnumerable()
-                                                      where order.Field<String>("Порода") == Poroda
-                                                      select order;
-            List<DataRow> res = query1.ToList();
-            idPoroda = res[0].Field<int>("id");
-        }
-   
-    }
-    class accessConnect
-    {
-        string strConPosition; // строка соединения с базой, в которой лежат таблицы с выработками, горизонтами и пр
-        string strConAngel;    // строка соединения с базой, из которой читаем и пишем данные прибора
-        public dataToDisplay dtd = new dataToDisplay();
+        string strConMainTbl; // строка соединения с базой, в которой лежат таблицы с выработками, горизонтами и пр
+        string strConAngelTbl;    // строка соединения с базой, из которой читаем и пишем данные прибора
+        public DataToDisplay dtd = new DataToDisplay(); // данные для отображения
+        public const string MAINTABLE = @"\PEZ_tbl.accdb";
+        public const string TABLETOADD = @"\ПЭЗ_И.accdb";
+        const string ANGELTABLE = @"\PEZ-angel.accdb";
         
 
-        public accessConnect (string path)
+        public AccessConnect (string path)
         {
-            strConPosition = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source="+path; //   H:\\OLYA\\mulev\\PEZ\\PEZ_tbl.accdb
-            strConAngel = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + System.IO.Path.GetDirectoryName(path) + "\\PEZ-angel.accdb"; 
+            strConMainTbl = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path + MAINTABLE;
+            strConAngelTbl = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path + ANGELTABLE; 
             
             LoadPosition();
         }
 
        public bool SaveAngel(List <AngelData> adl, string [] param) 
         {
-          string strCon = strConAngel;
+          //string.string strCon = strConAngelTbl;
           bool result = false;
             // определяем id параметров места по их именам 
-           dtd.setVirabotkaHorizont(param[3],param[4],param[5],param[7] );
-           
+           dtd.setVirabotkaHorizontid(param[3],param[4],param[5]);
+           dtd.setNapravlenieid(param[7]); 
 
             try
             {
-                using (OleDbConnection conn = new OleDbConnection(strCon))
+                using (OleDbConnection conn = new OleDbConnection(strConAngelTbl))
                 {   
                     conn.Open();
                     // либо находим, либо дописываем запись в таблицу Центр
@@ -84,11 +45,14 @@ namespace Angel_Access
                     if (idCenter == -1) return result; 
                         // todo - генерируем ошибку;
                     int idZamer = get_zamer(conn, idCenter, adl[0].Dt, dtd.idPribor, 1); 
-                    if (idZamer  == -1) return result; 
-                    
+                    if (idZamer  == -1) return result;
+                    String angelZamer = @"Insert Into Angel_ЗАМЕРЫ ([ЗамерПЭЗ], [Участок],[Горизонт], [Выработка], [Блок], [Привязка], [Порода]) Values (" + idZamer + ",'" + param[2] + "','" + param[1] + "','" + param[3] + "','" + param[4] + "','" + param[6] + "','" + dtd.Poroda + "')";
+                    OleDbCommand cmdReserv = new OleDbCommand(angelZamer, conn);
+                    cmdReserv.ExecuteNonQuery();  
+ 
                     foreach (AngelData ad in adl)
                     {
-                        String my_query1 = @"INSERT INTO Angel_ПОКАЗАНИЯ (Замер,Line, Picket, [Comp],[Time], t, A, Lmin, Lmax, VarA, B, L1, L2, L3, L4, L5, L6,L7,L8,L9,L10) Values (" + idZamer+ ","+ ad.getAsString()+")";
+                        String my_query1 = @"INSERT INTO Angel_ПОКАЗАНИЯ (Замер,Line, Picket, [Comp],[Time], t, A, Lmin, Lmax, VarA, B, L1, L2, L3, L4, L5, L6,L7,L8,L9,L10) Values (" + idZamer+ ","+ ad.getAllAsString()+")";
                         OleDbCommand cmd = new OleDbCommand(my_query1, conn);
                         cmd.ExecuteNonQuery();   
                     }
@@ -132,8 +96,9 @@ namespace Angel_Access
 
         public void setAllids(string [] param)
         {
-            // определяем id параметров места по их именам 
-            dtd.setVirabotkaHorizont(param[3], param[4], param[5], param[7]);
+            // выставляем id параметров места по их именам 
+            dtd.setVirabotkaHorizontid(param[3], param[4], param[5]);
+            dtd.setNapravlenieid(param[7]);
             // щпределяем id pf
         
         }
@@ -161,9 +126,7 @@ namespace Angel_Access
                 object tmp = cmdCheckCenter.ExecuteScalar();
                 if (tmp == null) //  не нашли такую запись
                 {
-                    // и нужно запустить окно для выбора породы
-                    askPoroda Cdialog = new askPoroda(Virabotka, Priviazka, Napravlenie, dtd);
-                    Cdialog.ShowDialog();
+
                     String insertCenter = @"Insert into Центр ([Выработка], [Привязка], [Направление], [Порода]) Values ('" + idVirabotka + "', '" + Priviazka + "','" + idNapravlenie + "','" + dtd.idPoroda + "')";
 
                     OleDbCommand cmdInsertCenter = new OleDbCommand(insertCenter, conn);
@@ -184,13 +147,44 @@ namespace Angel_Access
          
         }
 
+        public int check_Porodaid(string Priviazka)
+        {
+            int res = -1;
+            dtd.Poroda = "n/a";
+            // проверяем, есть ли такая запись в таблице Центр
+            String checkPoroda = @"SELECT Центр.Порода FROM Центр where Центр.Выработка = " + dtd.idVirabotka + " AND Центр.Привязка ='" + Priviazka + "' AND Центр.Направление =" + dtd.idNapravlenie;
+            using (OleDbConnection conn = new OleDbConnection(strConAngelTbl))
+            {
+                conn.Open();
+                try
+                {
+                    OleDbCommand cmd = new OleDbCommand(checkPoroda, conn);
+                    object tmp = cmd.ExecuteScalar();
+                    if (tmp != null)
+                    { //  нашли такую запись
+                        res = (int)tmp;
+                        dtd.Poroda = dtd.setPoroda(res);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            dtd.idPoroda = res; 
+            return res;
+            
+        }
+
 /// <summary>
 /// начальная загрузка - читаем из базы нужные таблицы и переменные
 /// </summary>
          private void LoadPosition()
         {
              // строка соединения с базой из которой берем горизонты и пр - и ничего не пишем
-            string strCon = strConPosition; //Settings.Default.PID2dbConnectionString;
+            string strCon = strConMainTbl; //Settings.Default.PID2dbConnectionString;
 
             try
             {
@@ -268,7 +262,7 @@ namespace Angel_Access
 FROM Горизонт INNER JOIN (Участок INNER JOIN (Блок INNER JOIN (Подэтаж INNER JOIN Выработка ON Подэтаж.id = Выработка.Подэтаж) ON Блок.id = Выработка.Блок) ON Участок.id = Выработка.Участок) ON Горизонт.id = Выработка.Горизонт
 WHERE (((Горизонт.Горизонт)=" +hor+") AND ((Участок.Участок)='"+reg+"'))";           
 
-             string strCon = strConPosition; 
+             string strCon = strConMainTbl; 
 
              try
              {

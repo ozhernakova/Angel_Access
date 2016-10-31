@@ -11,11 +11,11 @@ namespace Angel_Access
 {
     public partial class askPoroda : Form
     {
-        dataToDisplay dtd;
-        public askPoroda(string Virabotka, string Priviazka, string Napravlenie, dataToDisplay dtd)
+        DataToDisplay dtd;
+        public askPoroda(string question,DataToDisplay dtd)
         {
             InitializeComponent();
-            label2.Text = string.Format ("В параметрах места замера выбраны Выработка: {0}, Привязка: {1}, Направление: {2}. В базе данных не найдено такого сочетания параметров. Чтобы добавить этот центр измерений в базу, пожалуйста, уточните породу:", Virabotka,  Priviazka,  Napravlenie );
+            label2.Text = question;
             comboBox1.DataSource = dtd.porodi;
             comboBox1.DisplayMember = "Порода";
             this.dtd = dtd;
@@ -32,6 +32,7 @@ namespace Angel_Access
         private void buttonOK_Click(object sender, EventArgs e)
         {
             dtd.setidPoroda(comboBox1.Text);
+            dtd.Poroda = comboBox1.Text;
         }
     }
 }

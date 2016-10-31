@@ -53,14 +53,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Angel_Access.exe" size="64000">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Angel_Access.exe" size="80384">
       <assemblyIdentity name="Angel_Access" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>890snv02euKNxCIaaUfhBYDvYCk=</dsig:DigestValue>
+        <dsig:DigestValue>qO4YOtfRU+4jc/2LHt89WTtvXGk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

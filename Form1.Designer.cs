@@ -43,14 +43,17 @@
             this.buttonUploadData = new System.Windows.Forms.Button();
             this.labelUploaded = new System.Windows.Forms.Label();
             this.groupBoxZamer = new System.Windows.Forms.GroupBox();
+            this.button3 = new System.Windows.Forms.Button();
             this.groupBoxVirabotka = new System.Windows.Forms.GroupBox();
+            this.comboBoxPoroda = new System.Windows.Forms.ComboBox();
+            this.labelPoroda = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.labelReg = new System.Windows.Forms.Label();
             this.labelHor = new System.Windows.Forms.Label();
             this.textBoxPriviazka = new System.Windows.Forms.TextBox();
-            this.comboBoxNapravlenie = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.comboBoxPriviazka = new System.Windows.Forms.ComboBox();
+            this.comboBoxNapravlenie = new System.Windows.Forms.ComboBox();
+            this.labelNapravlenie = new System.Windows.Forms.Label();
             this.comboBoxVirabotka = new System.Windows.Forms.ComboBox();
             this.comboBoxBlock = new System.Windows.Forms.ComboBox();
             this.comboBoxPodetag = new System.Windows.Forms.ComboBox();
@@ -58,10 +61,12 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnWriteToBase = new System.Windows.Forms.Button();
             this.dataGridViewZamer = new System.Windows.Forms.DataGridView();
             this.labelZamer = new System.Windows.Forms.Label();
             this.labelMissingBase = new System.Windows.Forms.Label();
+            this.printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog();
+            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             this.groupBoxRegion.SuspendLayout();
             this.groupBoxFromFile.SuspendLayout();
             this.groupBoxZamer.SuspendLayout();
@@ -206,26 +211,39 @@
             // groupBoxZamer
             // 
             this.groupBoxZamer.AutoSize = true;
+            this.groupBoxZamer.Controls.Add(this.button3);
             this.groupBoxZamer.Controls.Add(this.groupBoxVirabotka);
-            this.groupBoxZamer.Controls.Add(this.button1);
+            this.groupBoxZamer.Controls.Add(this.btnWriteToBase);
             this.groupBoxZamer.Controls.Add(this.dataGridViewZamer);
             this.groupBoxZamer.Controls.Add(this.labelZamer);
             this.groupBoxZamer.Location = new System.Drawing.Point(325, 6);
             this.groupBoxZamer.Name = "groupBoxZamer";
-            this.groupBoxZamer.Size = new System.Drawing.Size(637, 748);
+            this.groupBoxZamer.Size = new System.Drawing.Size(691, 748);
             this.groupBoxZamer.TabIndex = 16;
             this.groupBoxZamer.TabStop = false;
             this.groupBoxZamer.Text = "Привязка измерений по месту";
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(380, 659);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(235, 49);
+            this.button3.TabIndex = 12;
+            this.button3.Text = "button3";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // groupBoxVirabotka
             // 
+            this.groupBoxVirabotka.Controls.Add(this.comboBoxPoroda);
+            this.groupBoxVirabotka.Controls.Add(this.labelPoroda);
             this.groupBoxVirabotka.Controls.Add(this.label9);
             this.groupBoxVirabotka.Controls.Add(this.labelReg);
             this.groupBoxVirabotka.Controls.Add(this.labelHor);
             this.groupBoxVirabotka.Controls.Add(this.textBoxPriviazka);
             this.groupBoxVirabotka.Controls.Add(this.comboBoxPriviazka);
             this.groupBoxVirabotka.Controls.Add(this.comboBoxNapravlenie);
-            this.groupBoxVirabotka.Controls.Add(this.label6);
+            this.groupBoxVirabotka.Controls.Add(this.labelNapravlenie);
             this.groupBoxVirabotka.Controls.Add(this.comboBoxVirabotka);
             this.groupBoxVirabotka.Controls.Add(this.comboBoxBlock);
             this.groupBoxVirabotka.Controls.Add(this.comboBoxPodetag);
@@ -235,9 +253,27 @@
             this.groupBoxVirabotka.Controls.Add(this.label7);
             this.groupBoxVirabotka.Location = new System.Drawing.Point(7, 22);
             this.groupBoxVirabotka.Name = "groupBoxVirabotka";
-            this.groupBoxVirabotka.Size = new System.Drawing.Size(623, 234);
+            this.groupBoxVirabotka.Size = new System.Drawing.Size(673, 239);
             this.groupBoxVirabotka.TabIndex = 11;
             this.groupBoxVirabotka.TabStop = false;
+            // 
+            // comboBoxPoroda
+            // 
+            this.comboBoxPoroda.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPoroda.FormattingEnabled = true;
+            this.comboBoxPoroda.Location = new System.Drawing.Point(484, 189);
+            this.comboBoxPoroda.Name = "comboBoxPoroda";
+            this.comboBoxPoroda.Size = new System.Drawing.Size(162, 24);
+            this.comboBoxPoroda.TabIndex = 21;
+            // 
+            // labelPoroda
+            // 
+            this.labelPoroda.AutoSize = true;
+            this.labelPoroda.Location = new System.Drawing.Point(404, 194);
+            this.labelPoroda.Name = "labelPoroda";
+            this.labelPoroda.Size = new System.Drawing.Size(58, 17);
+            this.labelPoroda.TabIndex = 20;
+            this.labelPoroda.Text = "Порода";
             // 
             // label9
             // 
@@ -266,28 +302,11 @@
             // 
             // textBoxPriviazka
             // 
-            this.textBoxPriviazka.Location = new System.Drawing.Point(250, 152);
+            this.textBoxPriviazka.Location = new System.Drawing.Point(219, 152);
             this.textBoxPriviazka.Name = "textBoxPriviazka";
-            this.textBoxPriviazka.Size = new System.Drawing.Size(270, 22);
+            this.textBoxPriviazka.Size = new System.Drawing.Size(404, 22);
             this.textBoxPriviazka.TabIndex = 14;
-            // 
-            // comboBoxNapravlenie
-            // 
-            this.comboBoxNapravlenie.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxNapravlenie.FormattingEnabled = true;
-            this.comboBoxNapravlenie.Location = new System.Drawing.Point(250, 189);
-            this.comboBoxNapravlenie.Name = "comboBoxNapravlenie";
-            this.comboBoxNapravlenie.Size = new System.Drawing.Size(162, 24);
-            this.comboBoxNapravlenie.TabIndex = 13;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(13, 194);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(97, 17);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "Направление";
+            this.textBoxPriviazka.Validating += new System.ComponentModel.CancelEventHandler(this.textBoxPriviazka_Validating);
             // 
             // comboBoxPriviazka
             // 
@@ -295,35 +314,53 @@
             this.comboBoxPriviazka.FormattingEnabled = true;
             this.comboBoxPriviazka.Location = new System.Drawing.Point(250, 152);
             this.comboBoxPriviazka.Name = "comboBoxPriviazka";
-            this.comboBoxPriviazka.Size = new System.Drawing.Size(293, 24);
+            this.comboBoxPriviazka.Size = new System.Drawing.Size(396, 24);
             this.comboBoxPriviazka.TabIndex = 11;
             this.comboBoxPriviazka.SelectedIndexChanged += new System.EventHandler(this.comboBoxPriviazka_SelectedIndexChanged);
+            // 
+            // comboBoxNapravlenie
+            // 
+            this.comboBoxNapravlenie.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxNapravlenie.FormattingEnabled = true;
+            this.comboBoxNapravlenie.Location = new System.Drawing.Point(219, 191);
+            this.comboBoxNapravlenie.Name = "comboBoxNapravlenie";
+            this.comboBoxNapravlenie.Size = new System.Drawing.Size(162, 24);
+            this.comboBoxNapravlenie.TabIndex = 13;
+            // 
+            // labelNapravlenie
+            // 
+            this.labelNapravlenie.AutoSize = true;
+            this.labelNapravlenie.Location = new System.Drawing.Point(13, 194);
+            this.labelNapravlenie.Name = "labelNapravlenie";
+            this.labelNapravlenie.Size = new System.Drawing.Size(97, 17);
+            this.labelNapravlenie.TabIndex = 12;
+            this.labelNapravlenie.Text = "Направление";
             // 
             // comboBoxVirabotka
             // 
             this.comboBoxVirabotka.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxVirabotka.FormattingEnabled = true;
-            this.comboBoxVirabotka.Location = new System.Drawing.Point(250, 45);
+            this.comboBoxVirabotka.Location = new System.Drawing.Point(219, 45);
             this.comboBoxVirabotka.Name = "comboBoxVirabotka";
-            this.comboBoxVirabotka.Size = new System.Drawing.Size(296, 24);
+            this.comboBoxVirabotka.Size = new System.Drawing.Size(427, 24);
             this.comboBoxVirabotka.TabIndex = 5;
             // 
             // comboBoxBlock
             // 
             this.comboBoxBlock.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxBlock.FormattingEnabled = true;
-            this.comboBoxBlock.Location = new System.Drawing.Point(250, 75);
+            this.comboBoxBlock.Location = new System.Drawing.Point(219, 75);
             this.comboBoxBlock.Name = "comboBoxBlock";
-            this.comboBoxBlock.Size = new System.Drawing.Size(296, 24);
+            this.comboBoxBlock.Size = new System.Drawing.Size(427, 24);
             this.comboBoxBlock.TabIndex = 4;
             // 
             // comboBoxPodetag
             // 
             this.comboBoxPodetag.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPodetag.FormattingEnabled = true;
-            this.comboBoxPodetag.Location = new System.Drawing.Point(250, 105);
+            this.comboBoxPodetag.Location = new System.Drawing.Point(219, 101);
             this.comboBoxPodetag.Name = "comboBoxPodetag";
-            this.comboBoxPodetag.Size = new System.Drawing.Size(296, 24);
+            this.comboBoxPodetag.Size = new System.Drawing.Size(427, 24);
             this.comboBoxPodetag.TabIndex = 6;
             // 
             // label3
@@ -363,16 +400,16 @@
             this.label7.TabIndex = 2;
             this.label7.Text = "Привязка замеров: (введите или выберите)";
             // 
-            // button1
+            // btnWriteToBase
             // 
-            this.button1.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.button1.Location = new System.Drawing.Point(15, 658);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(250, 50);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Записать в базу?";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnWriteToBase.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.btnWriteToBase.Location = new System.Drawing.Point(15, 658);
+            this.btnWriteToBase.Name = "btnWriteToBase";
+            this.btnWriteToBase.Size = new System.Drawing.Size(250, 50);
+            this.btnWriteToBase.TabIndex = 6;
+            this.btnWriteToBase.Text = "Записать в базу и распечатать?";
+            this.btnWriteToBase.UseVisualStyleBackColor = false;
+            this.btnWriteToBase.Click += new System.EventHandler(this.button1_Click);
             // 
             // dataGridViewZamer
             // 
@@ -384,7 +421,7 @@
             this.dataGridViewZamer.Name = "dataGridViewZamer";
             this.dataGridViewZamer.RowHeadersVisible = false;
             this.dataGridViewZamer.RowTemplate.Height = 24;
-            this.dataGridViewZamer.Size = new System.Drawing.Size(600, 307);
+            this.dataGridViewZamer.Size = new System.Drawing.Size(656, 307);
             this.dataGridViewZamer.TabIndex = 5;
             // 
             // labelZamer
@@ -400,18 +437,33 @@
             // labelMissingBase
             // 
             this.labelMissingBase.AutoSize = true;
-            this.labelMissingBase.Location = new System.Drawing.Point(30, 30);
-            this.labelMissingBase.MaximumSize = new System.Drawing.Size(700, 0);
+            this.labelMissingBase.Location = new System.Drawing.Point(340, 30);
+            this.labelMissingBase.MaximumSize = new System.Drawing.Size(400, 0);
             this.labelMissingBase.Name = "labelMissingBase";
             this.labelMissingBase.Size = new System.Drawing.Size(0, 17);
             this.labelMissingBase.TabIndex = 17;
+            // 
+            // printPreviewDialog1
+            // 
+            this.printPreviewDialog1.AutoScrollMargin = new System.Drawing.Size(0, 0);
+            this.printPreviewDialog1.AutoScrollMinSize = new System.Drawing.Size(0, 0);
+            this.printPreviewDialog1.ClientSize = new System.Drawing.Size(400, 300);
+            this.printPreviewDialog1.Document = this.printDocument1;
+            this.printPreviewDialog1.Enabled = true;
+            this.printPreviewDialog1.Icon = ((System.Drawing.Icon)(resources.GetObject("printPreviewDialog1.Icon")));
+            this.printPreviewDialog1.Name = "printPreviewDialog1";
+            this.printPreviewDialog1.Visible = false;
+            // 
+            // printDocument1
+            // 
+            this.printDocument1.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDocument1_PrintPage);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(974, 744);
+            this.ClientSize = new System.Drawing.Size(1017, 744);
             this.Controls.Add(this.labelMissingBase);
             this.Controls.Add(this.groupBoxZamer);
             this.Controls.Add(this.groupBoxFromFile);
@@ -449,7 +501,7 @@
         private System.Windows.Forms.Label labelUploaded;
         private System.Windows.Forms.ListView listViewZameri;
         private System.Windows.Forms.GroupBox groupBoxZamer;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnWriteToBase;
         private System.Windows.Forms.DataGridView dataGridViewZamer;
         private System.Windows.Forms.Label labelZamer;
         private System.Windows.Forms.Label labelMissingBase;
@@ -460,7 +512,7 @@
         private System.Windows.Forms.Label labelHor;
         private System.Windows.Forms.TextBox textBoxPriviazka;
         private System.Windows.Forms.ComboBox comboBoxNapravlenie;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label labelNapravlenie;
         private System.Windows.Forms.ComboBox comboBoxPriviazka;
         private System.Windows.Forms.ComboBox comboBoxVirabotka;
         private System.Windows.Forms.ComboBox comboBoxBlock;
@@ -469,6 +521,11 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.PrintPreviewDialog printPreviewDialog1;
+        private System.Drawing.Printing.PrintDocument printDocument1;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.ComboBox comboBoxPoroda;
+        private System.Windows.Forms.Label labelPoroda;
     }
 }
 
