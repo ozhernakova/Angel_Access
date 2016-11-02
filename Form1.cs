@@ -17,6 +17,7 @@ namespace Angel_Access
         AccessConnect baseConnection;
         AngelDataList dataToDisplay;
         List <AngelData> chozenZameri;
+        List<int> choiceZ;
         string pathToAccess;  // путь к таблице с данными о выработках
         
         public Form1()
@@ -162,7 +163,7 @@ namespace Angel_Access
         private void buttonUploadData_Click(object sender, EventArgs e)
         {
             // загрузить файл с данными
-            StreamReader file = null;
+            
             openFileDialog1.InitialDirectory = Application.StartupPath; //@"H:\OLYA\mulev\PEZ\PEZ_tbl.accdb";//Properties.Settings.Default.angelpath;
             openFileDialog1.Filter = "txt  (*.txt)|*.txt|Все файлы (*.*)|*.*";
             openFileDialog1.FilterIndex = 1;
@@ -185,16 +186,12 @@ namespace Angel_Access
                         dataToDisplay = new AngelDataList();
                         dataGridViewZamer.DataSource = null;
                         labelZamer.Text = "Выберите нужные замеры из списка";
-                       
-                        file = new StreamReader(openFileDialog1.FileName);
-                       
-                        string line;
-                        while ((line = file.ReadLine()) != null)
-                        {
-                            dataToDisplay.addAngelData(line);
-                        }
-                        dataToDisplay.divideIntoZameri();
 
+                        // считали данные
+                        using (StreamReader file = new StreamReader(openFileDialog1.FileName)) 
+                        {
+                            dataToDisplay.readAngelData(file);
+                        }
                     }
                                                       
                     // добавляем элемент в ListView
@@ -223,16 +220,16 @@ namespace Angel_Access
             
             
             labelZamer.Text = "";
-            List <int> ch = new List <int>();
+            choiceZ = new List<int>();
             
             foreach ( ListViewItem item in choice )
 	        {
 		            labelZamer.Text += item.SubItems[0].Text+" " ;
-                    ch.Add (item.Index);
+                    choiceZ.Add(item.Index);
 	        }
             if (choice.Count > 0) { 
            chozenZameri = new List<AngelData>();
-           chozenZameri = dataToDisplay.collectSelectedZameri (ch.ToArray());
+           chozenZameri = dataToDisplay.collectSelectedZameri(choiceZ.ToArray());
            dataGridViewZamer.DataSource = chozenZameri;}
         }
 
@@ -345,24 +342,32 @@ namespace Angel_Access
             
 
             Graphics g = e.Graphics;
-
             Font font = new Font("Courier New", 14); //must use a mono spaced font as the spaces need to line up
-
             float fontHeight = font.GetHeight();
-
             int startX = e.MarginBounds.X;
             int endX = e.MarginBounds.Right;
             int startY = e.MarginBounds.Y;
             int offset = startY;
             SolidBrush sb = new SolidBrush(Color.Black);
             Pen pen = new Pen (sb);
-
             Font fb = new Font("Courier New", 12, FontStyle.Bold);
             Font fontSmall = new Font("Courier New", 10);
             float fontSmallHeight = fontSmall.GetHeight();
 
+            DateTime thisDate = new DateTime();
+            float[] A = new float [3];
+            float [] B = new float[3];
+            dataToDisplay.printSelectedZamer(choiceZ[0], out thisDate, out A, out B);
+            if (choiceZ.Count > 1)
+            { 
+                choiceZ.RemoveAt(0);
+                e.HasMorePages = true;
+            }
+            else
+                e.HasMorePages = false;
+
             // дата измерений - chozenZameri[0].Dt
-            g.DrawString(string.Format("Дата замера: {0:f}, прибор \"Ангел\" №_____", DateTime.Now), new Font("Courier New", 15), sb, startX, offset);
+            g.DrawString(string.Format("Дата замера: {0:f}, прибор \"Ангел\" №___", thisDate), new Font("Courier New", 14, FontStyle.Bold), sb, startX, offset);
             offset = offset + (int)fontHeight*2; 
             g.DrawString("Участок: " + labelReg.Text, font, sb, startX, offset);
             offset = offset + (int)fontHeight;  
@@ -378,7 +383,7 @@ namespace Angel_Access
             if (baseConnection.dtd.Poroda != null) poroda = baseConnection.dtd.Poroda;
             g.DrawString("Порода: " +poroda , font, sb, startX, offset);
             offset = offset + (int)fontHeight; 
-            g.DrawString("P норм, Ом/м _________Оператор ______________"  , font, sb, startX, offset);
+            g.DrawString("P норм_______Ом/м    Оператор ______________"  , font, sb, startX, offset);
             offset = offset + (int)fontHeight*2; 
 
     
@@ -431,52 +436,82 @@ namespace Angel_Access
             offset = offset + (int)fontHeight * 2;
             Rectangle twelve = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
             g.DrawString(" неопасно опасно", fontSmall, sb, twelve);
-            offset = offset + (int)fontHeight * 3;
+            
+            offset = offset + (int)fontHeight * 2;
+            g.DrawString("expert"  , font, sb, startX, offset);
+            offset = offset + (int)fontHeight * 2;
+
+            one = new Rectangle(startX, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Вдоль выработки", font, sb, one);
+            g.DrawRectangle(pen, one);
+
+            two = new Rectangle(startX + e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Поперек выработки", font, sb, two);
+            g.DrawRectangle(pen, two);
+
+            three = new Rectangle(startX + e.MarginBounds.Width / 2, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Вертикально", font, sb, three);
+            g.DrawRectangle(pen, three);
+
+            four = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Категория удароопасности", fontSmall, sb, four);
+            g.DrawRectangle(pen, four);
+
+            offset = offset + (int)fontHeight * 2;
+
+            five = new Rectangle(startX, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString("   A   ", fontSmall, sb, five);
+            g.DrawRectangle(pen, five);
+
+            six = new Rectangle(startX + e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString("   B   ", fontSmall, sb, six);
+            g.DrawRectangle(pen, six);
+
+            seven = new Rectangle(startX + e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString("   A   ", fontSmall, sb, seven);
+            g.DrawRectangle(pen, seven);
+
+            eight = new Rectangle(startX + 3 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString("   B   ", fontSmall, sb, eight);
+            g.DrawRectangle(pen, eight);
+
+            nine = new Rectangle(startX + e.MarginBounds.Width / 2, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString("   A   ", fontSmall, sb, nine);
+            g.DrawRectangle(pen, nine);
+
+            ten = new Rectangle(startX + 5 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString("   B   ", fontSmall, sb, ten);
+            g.DrawRectangle(pen, ten);
+
+            eleven = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
+            g.DrawRectangle(pen, eleven);
+
+            g.DrawLine(pen, new Point(startX, offset + (int)fontSmallHeight), new Point(endX, offset + (int)fontSmallHeight));
+            offset = offset + (int)fontHeight * 2;
+
+            twelve = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
+            g.DrawString(" неопасно опасно", fontSmall, sb, twelve);
+
+            //g.DrawString(" " + str[0], fontSmall, sb, new Rectangle(startX, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
+            //g.DrawString(" " + str[1], fontSmall, sb, new Rectangle(startX + e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
+            //g.DrawString(" " + str[0], fontSmall, sb, new Rectangle(startX + e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
+            //g.DrawString(" " + str[1], fontSmall, sb, new Rectangle(startX + 3 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
+            //g.DrawString(" " + str[0], fontSmall, sb, new Rectangle(startX + e.MarginBounds.Width / 2, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
+            //g.DrawString(" " + str[1], fontSmall, sb, new Rectangle(startX + 5 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
 
 
-            //foreach (AngelData item in chozenZameri)
-            //{
-                //create the string to print on the reciept
-                //string productDescription = item;
-                //string productTotal = item.Substring(item.Length - 6, 6);
-                
+            offset = offset + (int)fontHeight * 2;
 
+            one = new Rectangle(startX, offset, e.MarginBounds.Width, (int)fontHeight * 7);
+            g.DrawString("Примечание (эскиз или др)", fontSmall, sb, one);
+            g.DrawRectangle(pen, one);
 
-                //    graphic.DrawString(productLine, new Font("Courier New", 12, FontStyle.Italic), new SolidBrush(Color.Red), startX, startY + offset);
-
-                //    offset = offset + (int)fontHeight + 5; //make the spacing consistent
-                //}
-                //else
-                //{
-                //    string productLine = productDescription;
-
-                //    graphic.DrawString(productLine, font, new SolidBrush(Color.Black), startX, startY + offset);
-
-                //    offset = offset + (int)fontHeight + 5; //make the spacing consistent
-                //}
-
-           // }
-
-
-
-            ////when we have drawn all of the items add the total
-
-            //offset = offset + 20; //make some room so that the total stands out.
-
-            //graphic.DrawString("Total to pay ".PadRight(30) + String.Format("{0:c}", totalprice), new Font("Courier New", 12, FontStyle.Bold), new SolidBrush(Color.Black), startX, startY + offset);
-
-            //offset = offset + 30; //make some room so that the total stands out.
-            //graphic.DrawString("CASH ".PadRight(30) + String.Format("{0:c}", cash), font, new SolidBrush(Color.Black), startX, startY + offset);
-            //offset = offset + 15;
-            //graphic.DrawString("CHANGE ".PadRight(30) + String.Format("{0:c}", change), font, new SolidBrush(Color.Black), startX, startY + offset);
-            //offset = offset + 30; //make some room so that the total stands out.
-            //graphic.DrawString("     Thank-you for your custom,", font, new SolidBrush(Color.Black), startX, startY + offset);
-            //offset = offset + 15;
-            //graphic.DrawString("       please come back soon!", font, new SolidBrush(Color.Black), startX, startY + offset);
+            offset = offset + (int)fontHeight * 8;
+            
             g.DrawLine(pen, new Point(startX, offset), new Point(endX, offset));
             offset = offset + (int)fontHeight;
 
-            g.DrawString(string.Format("ш. Таштагольская, дата распечатки: {0:f} ", DateTime.Now), new Font("Courier New", 12, FontStyle.Italic), sb, startX, offset);
+            g.DrawString(string.Format("ш. Таштагольская, дата распечатки: {0:f}, автор {1}", DateTime.Now, System.Environment.UserName), new Font("Courier New", 10, FontStyle.Italic), sb, startX, offset);
   
         }
 

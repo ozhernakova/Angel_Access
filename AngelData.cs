@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -58,16 +59,34 @@ namespace Angel_Access
             L9 = source[19];
             L10 = source[20];
         }
+       // public int nomerZamera; // { get; set; }
     }
 
   
 
     class AngelDataList 
     {
-        class Zamer  {public List<AngelData> odinZamer = new List<AngelData>();}
+        class Zamer  
+        {public List<AngelData> odinZamer = new List<AngelData>();
+        }
         List <AngelData> adl = new List<AngelData>();
         List<Zamer> zamerList = new List<Zamer>();
         public List <ListViewItem> lvi_list = new List<ListViewItem>();
+        public void printSelectedZamer(int i, out DateTime dt, out float[]A, out float []B)
+        {
+            dt = zamerList[i].odinZamer[0].Dt;
+            int number = zamerList[i].odinZamer.Count;
+            A = new float[number];
+            B = new float[number];
+            int j = 0;
+            foreach (AngelData ad in zamerList[i].odinZamer) 
+            {
+                A[j] = Single.Parse(ad.A);
+                B[j] = Single.Parse(ad.B);
+                j = j + 1;
+            }
+        
+        }
 
         public List<AngelData> collectSelectedZameri(int[] items) 
         {
@@ -77,7 +96,7 @@ namespace Angel_Access
             return res;
         } 
 
-        public int divideIntoZameri() 
+        int divideIntoZameri() 
         {
             int i = 0;
             int num = adl.Count();
@@ -108,10 +127,11 @@ namespace Angel_Access
                         // добавляем элемент в ListView
                         listItem = new ListViewItem();
                         listItem.Text = "Замер " + (i + 1).ToString();
+                //        adl[j].nomerZamera = i + 1;
                         listItem.SubItems.AddRange(new string[] { adl[j].Line.ToString(), adl[j].Picket.ToString() });
                         lvi_list.Add (listItem);
                     }
- 
+
                     zamerList[i].odinZamer.Add(adl[j]); 
                     
                 }
@@ -119,7 +139,16 @@ namespace Angel_Access
         
         }
 
-        public void addAngelData(string line) 
+        public void readAngelData(StreamReader stream) 
+        {
+            string line;
+            while ((line = stream.ReadLine()) != null)
+            {
+                addAngelData(line);
+            }
+            divideIntoZameri();
+        }
+        void addAngelData(string line) 
         {
             // разбиваем на подстроки
             string[] stringSeparators = new string[] { " ", "\t" };
@@ -131,6 +160,7 @@ namespace Angel_Access
             { 
                 AngelData ad = new AngelData();
                 ad.setAllFromString(angelString);
+                
                 adl.Add(ad);
             }
 
