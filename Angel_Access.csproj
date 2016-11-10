@@ -117,10 +117,10 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Angel_Access_TemporaryKey.pfx" />
-    <EmbeddedResource Include="Properties\Settings.settings">
+    <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    </None>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>

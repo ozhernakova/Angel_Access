@@ -14,14 +14,11 @@ namespace Angel_Access
 {
     public partial class Form1 : Form
     {
-    
-        DataToDisplay dtd; 
-        AngelDataList angelData;
+        AccessConnect baseConnection;
+        AngelDataList dataToDisplay;
         List <AngelData> chozenZameri;
         List<int> choiceZ;
         string pathToAccess;  // путь к таблице с данными о выработках
-
-        int idVirabotka;
         
         public Form1()
         {
@@ -31,18 +28,17 @@ namespace Angel_Access
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            pathToAccess = Properties.Settings.Default.accesspath;
+            pathToAccess = Properties.Settings.Default.path;
             // размещаем форму повыше - чтобы лучше помещалась
             this.Location = new System.Drawing.Point(50, 1);
             // выделяем место под данные, которые отображаем
-            angelData = new AngelDataList();
-            dtd = new DataToDisplay(); 
+            dataToDisplay = new AngelDataList();
 
             // проверяем связь с базой акцесса PEZ_tbl. Если нет - нужно выбрать путь к ней и запомнить его в установках.
             // pathToAccess = Properties.Settings.Default.path;//Application.StartupPath;//
-            if (File.Exists(pathToAccess + AccessConnect.TABLES)) 
+            if (File.Exists(pathToAccess + AccessConnect.MAINTABLE)) 
             {
-                dtd.ConnectToBase(pathToAccess);
+                baseConnection = new AccessConnect(pathToAccess);
                 comboBoxes_Load();
             }
             else 
@@ -53,9 +49,9 @@ namespace Angel_Access
                 if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     pathToAccess = Path.GetDirectoryName(openFileDialog1.FileName);
-                    dtd.ConnectToBase(pathToAccess);
+                    baseConnection = new AccessConnect(pathToAccess);
                     comboBoxes_Load();
-                    Properties.Settings.Default.accesspath = pathToAccess;
+                    Properties.Settings.Default.path = pathToAccess;
                     Properties.Settings.Default.Save();
                 }
 
@@ -79,13 +75,13 @@ namespace Angel_Access
 
         void comboBoxes_Load() 
         {
-            comboBoxHorizont.DataSource = dtd.horizons;
+            comboBoxHorizont.DataSource = baseConnection.dtd.horizons;
             comboBoxHorizont.DisplayMember = "Горизонт";
-            comboBoxRegion.DataSource = dtd.regions;
+            comboBoxRegion.DataSource = baseConnection.dtd.regions;
             comboBoxRegion.DisplayMember = "Участок";
-            comboBoxNapravlenie.DataSource = dtd.napravlenie;
+            comboBoxNapravlenie.DataSource = baseConnection.dtd.napravlenie;
             comboBoxNapravlenie.DisplayMember = "Направление";
-            comboBoxPoroda.DataSource = dtd.porodi;
+            comboBoxPoroda.DataSource = baseConnection.dtd.porodi;
             comboBoxPoroda.DisplayMember = "Порода";
         }
 
@@ -93,20 +89,20 @@ namespace Angel_Access
 
         private void buttonRegion_Click(object sender, EventArgs e)
         {
-            findAllVirabotki();
+            horizonQuery();
         }
 
-        void findAllVirabotki() 
+        void horizonQuery() 
         {
-
-            int lineNumber = dtd.readVirabotki(comboBoxHorizont.Text, comboBoxRegion.Text);
+            
+            int lineNumber = baseConnection.virabotka(comboBoxHorizont.Text, comboBoxRegion.Text);
 
             NumberOfVirabot.Visible = true;
             NumberOfVirabot.Text = "Найдено выработок: " + lineNumber; 
 
             if (lineNumber > 0)
             {
-                comboBoxVirabotka.DataSource = dtd.virabotki;
+                comboBoxVirabotka.DataSource = baseConnection.dtd.virabotki;
                 comboBoxVirabotka.DisplayMember = "Выработка";
                 groupBoxVirabotka.Visible = true;
                 fillComboBox();
@@ -132,7 +128,7 @@ namespace Angel_Access
             // Выборка запросом - см https://msdn.microsoft.com/ru-ru/library/bb669073(v=vs.110).aspx
             // про dataview http://www.c-sharpcorner.com/article/dataview-in-C-Sharp/
             // и http://csharp.net-informations.com/dataview/create-dataview.htm
-            EnumerableRowCollection<DataRow> query = from order in dtd.virabotki.AsEnumerable()
+            EnumerableRowCollection<DataRow> query = from order in baseConnection.dtd.virabotki.AsEnumerable()
                                                      where order.Field<String>("Выработка") == comboBoxVirabotka.Text
                                                      select order;
 
@@ -144,14 +140,9 @@ namespace Angel_Access
             comboBoxPodetag.DataSource = view;
             comboBoxPodetag.DisplayMember = "Подэтаж";
 
-            labelDiametr.DataBindings.Clear();
-            labelDiametr.DataBindings.Add("Text", view, "Диаметр");
-
-            //view.
-
             
             // для привязок - показываем варианты выбора (их можно редактировать) и готовим новое поле для нового варианта
-            EnumerableRowCollection<DataRow> query1 = from order in dtd.priviazki.AsEnumerable()
+            EnumerableRowCollection<DataRow> query1 = from order in baseConnection.dtd.priviazki.AsEnumerable()
                                                      where order.Field<String>("Выработка") == comboBoxVirabotka.Text
                                                      select order;
             DataView view1 = query1.AsDataView();
@@ -167,14 +158,13 @@ namespace Angel_Access
         private void comboBoxVirabotka_SelectedIndexChanged(object sender, EventArgs e)
         {
             fillComboBox();
-  
         }
 
         private void buttonUploadData_Click(object sender, EventArgs e)
         {
             // загрузить файл с данными
-
-            openFileDialog1.InitialDirectory = Properties.Settings.Default.angelpath;//Application.StartupPath; //@"H:\OLYA\mulev\PEZ\PEZ_tbl.accdb";//Properties.Settings.Default.angelpath;
+            
+            openFileDialog1.InitialDirectory = Application.StartupPath; //@"H:\OLYA\mulev\PEZ\PEZ_tbl.accdb";//Properties.Settings.Default.angelpath;
             openFileDialog1.Filter = "txt  (*.txt)|*.txt|Все файлы (*.*)|*.*";
             openFileDialog1.FilterIndex = 1;
             openFileDialog1.FileName = "";
@@ -182,8 +172,8 @@ namespace Angel_Access
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-               Properties.Settings.Default.angelpath = Path.GetDirectoryName(openFileDialog1.FileName);
-               Properties.Settings.Default.Save();
+            //    Properties.Settings.Default.angelpath = Path.GetDirectoryName(openFileDialog1.FileName);
+             //   Properties.Settings.Default.Save();
                 try
                 {
                     if (( openFileDialog1.OpenFile()) != null)
@@ -193,19 +183,19 @@ namespace Angel_Access
                         // зачистили контролы
                         
                         listViewZameri.Clear();
-                        angelData = new AngelDataList();
+                        dataToDisplay = new AngelDataList();
                         dataGridViewZamer.DataSource = null;
                         labelZamer.Text = "Выберите нужные замеры из списка";
 
                         // считали данные
                         using (StreamReader file = new StreamReader(openFileDialog1.FileName)) 
                         {
-                            angelData.readAngelData(file);
+                            dataToDisplay.readAngelData(file);
                         }
                     }
                                                       
                     // добавляем элемент в ListView
-                    listViewZameri.Items.AddRange(angelData.lvi_list.ToArray());
+                    listViewZameri.Items.AddRange(dataToDisplay.lvi_list.ToArray());
                     // Create some column headers for the data. 
                     listViewZameriHeader();
                     labelUploaded.Text = labelUploaded.Text + " Выделено " + listViewZameri.Items.Count + " отдельных замеров. ";
@@ -239,16 +229,16 @@ namespace Angel_Access
 	        }
             if (choice.Count > 0) { 
            chozenZameri = new List<AngelData>();
-           chozenZameri = angelData.collectSelectedZameri(choiceZ.ToArray());
+           chozenZameri = dataToDisplay.collectSelectedZameri(choiceZ.ToArray());
            dataGridViewZamer.DataSource = chozenZameri;}
         }
 
         void hideSelectedZameri() 
         {
-            //foreach (ListViewItem item in listViewZameri.SelectedItems)
-            //{
-            //    listViewZameri.Items.Remove(item);
-            //} не работает - чтобы работало нужно по-другому собирать табличку
+            foreach (ListViewItem item in listViewZameri.SelectedItems)
+            {
+                listViewZameri.Items.Remove(item);
+            }
         }
 
         void listViewZameriHeader()
@@ -296,17 +286,19 @@ namespace Angel_Access
 
             if (result == DialogResult.OK) 
             {
-                dtd.setAllids(param);
-                if (dtd.idPoroda == -1)  // нужно запустить окно для выбора породы
+                // проверяем таблицу Центр и уточняем породу если требуется
+                baseConnection.setAllids(param);
+                if (baseConnection.check_Porodaid(param[6]) == -1)                     // и нужно запустить окно для выбора породы
                 {
-                    string question = string.Format("В параметрах места замера выбраны Выработка: {3}, Привязка: {6}, Направление: {7}. В базе данных не найдено такого сочетания параметров. Чтобы добавить этот центр измерений в таблицу Центр базы Access, пожалуйста, уточните породу:", param);
-                    askPoroda Cdialog = new askPoroda(question, dtd);
+                    string question = string.Format("В параметрах места замера выбраны Выработка: {3}, Привязка: {6}, Направление: {7}. В базе данных не найдено такого сочетания параметров. Чтобы добавить этот центр измерений в базу, пожалуйста, уточните породу:", param);
+
+                    askPoroda Cdialog = new askPoroda(question, baseConnection.dtd);
                     if ( Cdialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel) return;
                 }
-                if (dtd.SaveAngelData(chozenZameri, param))
+                if (baseConnection.SaveAngel(chozenZameri, param))
                 { 
                     MessageBox.Show("Записали!");
-                  //  hideSelectedZameri();
+                    hideSelectedZameri();
                     printingDialog();
                 }
                 else MessageBox.Show("Запись не удалась, поэтому на печать тоже не отправляли");
@@ -318,8 +310,9 @@ namespace Angel_Access
         private void button2_Click(object sender, EventArgs e)
         {
             // запуск Access 
-          
-            Process.Start(pathToAccess + AccessConnect.TABLETOADD);
+            string path = Path.GetDirectoryName (pathToAccess);//Properties.Settings.Default.path
+
+            Process.Start(path + AccessConnect.TABLETOADD);
 
         }
 
@@ -346,6 +339,8 @@ namespace Angel_Access
 
         private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
+            
+
             Graphics g = e.Graphics;
             Font font = new Font("Courier New", 14); //must use a mono spaced font as the spaces need to line up
             float fontHeight = font.GetHeight();
@@ -359,118 +354,79 @@ namespace Angel_Access
             Font fontSmall = new Font("Courier New", 10);
             float fontSmallHeight = fontSmall.GetHeight();
 
-            offset = offset + (int)fontHeight*4; 
+            DateTime thisDate = new DateTime();
+            float[] A = new float [3];
+            float [] B = new float[3];
+            dataToDisplay.printSelectedZamer(choiceZ[0], out thisDate, out A, out B);
+            if (choiceZ.Count > 1)
+            { 
+                choiceZ.RemoveAt(0);
+                e.HasMorePages = true;
+            }
+            else
+                e.HasMorePages = false;
+
+            // дата измерений - chozenZameri[0].Dt
+            g.DrawString(string.Format("Дата замера: {0:f}, прибор \"Ангел\" №___", thisDate), new Font("Courier New", 14, FontStyle.Bold), sb, startX, offset);
+            offset = offset + (int)fontHeight*2; 
             g.DrawString("Участок: " + labelReg.Text, font, sb, startX, offset);
             offset = offset + (int)fontHeight;  
             g.DrawString("Горизонт: " + labelHor.Text + "  Блок № " + comboBoxBlock.Text, font, sb, startX, offset);
             offset = offset + (int)fontHeight;  
             g.DrawString("Выработка: " + comboBoxVirabotka.Text, font, sb, startX, offset);
             offset = offset + (int)fontHeight;  
-            g.DrawString("Диаметр: " + labelDiametr.Text , font, sb, startX, offset);
+            g.DrawString("Диаметр: 2,5  3,5 другой(_______________) ", font, sb, startX, offset);
             offset = offset + (int)fontHeight;  
             g.DrawString("Привязка: " + textBoxPriviazka.Text, font, sb, startX, offset);
             offset = offset + (int)fontHeight;
-            
-            g.DrawString("Порода: " + dtd.Poroda, font, sb, startX, offset);
+            string poroda = "n/a";
+            if (baseConnection.dtd.Poroda != null) poroda = baseConnection.dtd.Poroda;
+            g.DrawString("Порода: " +poroda , font, sb, startX, offset);
             offset = offset + (int)fontHeight; 
-            g.DrawString("P норм " + dtd.Soprotivlenie +" Ом/м    Оператор ______________"  , font, sb, startX, offset);
-            offset = offset + (int)fontHeight*4; 
+            g.DrawString("P норм_______Ом/м    Оператор ______________"  , font, sb, startX, offset);
+            offset = offset + (int)fontHeight*2; 
 
     
-            //Rectangle one = new Rectangle(startX, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
-            //g.DrawString("Вдоль выработки", font, sb, one);
-            //g.DrawRectangle(pen, one);
-
-            //Rectangle two = new Rectangle(startX + e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
-            //g.DrawString("Поперек выработки", font, sb, two);
-            //g.DrawRectangle(pen, two);
-
-            //Rectangle three = new Rectangle(startX + e.MarginBounds.Width / 2, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
-            //g.DrawString("Вертикально", font, sb, three);
-            //g.DrawRectangle(pen, three);
-
-            //Rectangle four = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
-            //g.DrawString("Категория удароопасности", fontSmall, sb, four);
-            //g.DrawRectangle(pen, four);
-
-            //offset = offset + (int)fontHeight * 2;
-
-            //Rectangle five = new Rectangle(startX, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
-            //g.DrawString(" normal", fontSmall, sb, five);
-            //g.DrawRectangle(pen, five);
-
-            //Rectangle six = new Rectangle(startX + e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
-            //g.DrawString(" danger", fontSmall, sb, six);
-            //g.DrawRectangle(pen, six);
-
-            //Rectangle seven = new Rectangle(startX + e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
-            //g.DrawString(" normal", fontSmall, sb, seven);
-            //g.DrawRectangle(pen, seven);
-
-            //Rectangle eight = new Rectangle(startX + 3 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
-            //g.DrawString(" danger", fontSmall, sb, eight);
-            //g.DrawRectangle(pen, eight);
-
-            //Rectangle nine = new Rectangle(startX + e.MarginBounds.Width / 2, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
-            //g.DrawString(" normal", fontSmall, sb, nine);
-            //g.DrawRectangle(pen, nine);
-
-            //Rectangle ten = new Rectangle(startX + 5 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
-            //g.DrawString(" danger", fontSmall, sb, ten);
-            //g.DrawRectangle(pen, ten);
-
-            //Rectangle eleven = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
-            //g.DrawRectangle(pen, eleven);
-
-            //g.DrawLine(pen, new Point(startX, offset + (int)fontSmallHeight), new Point(endX, offset + (int)fontSmallHeight));
-            //offset = offset + (int)fontHeight * 2;
-            //Rectangle twelve = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
-            //g.DrawString(" неопасно опасно", fontSmall, sb, twelve);
-            
-            //offset = offset + (int)fontHeight * 2;
-            //g.DrawString("expert"  , font, sb, startX, offset);
-            //offset = offset + (int)fontHeight * 2;
-
-            Rectangle one = new Rectangle(startX, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
-            g.DrawString("Первая компонента(вдоль выработки?)", fontSmall, sb, one);
+            Rectangle one = new Rectangle(startX, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Вдоль выработки", font, sb, one);
             g.DrawRectangle(pen, one);
 
-            Rectangle two = new Rectangle(startX + e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
-            g.DrawString("Вторая компонента (поперек выработки?)", fontSmall, sb, two);
+            Rectangle two = new Rectangle(startX + e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Поперек выработки", font, sb, two);
             g.DrawRectangle(pen, two);
 
-            Rectangle three = new Rectangle(startX + e.MarginBounds.Width / 2, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
-            g.DrawString("Третья компонента (вертикально?)", fontSmall, sb, three);
+            Rectangle three = new Rectangle(startX + e.MarginBounds.Width / 2, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Вертикально", font, sb, three);
             g.DrawRectangle(pen, three);
 
-            Rectangle four = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
+            Rectangle four = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
             g.DrawString("Категория удароопасности", fontSmall, sb, four);
             g.DrawRectangle(pen, four);
 
-            offset = offset + (int)fontHeight * 4;
+            offset = offset + (int)fontHeight * 2;
 
             Rectangle five = new Rectangle(startX, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
-            g.DrawString("   A   ", fontSmall, sb, five);
+            g.DrawString(" normal", fontSmall, sb, five);
             g.DrawRectangle(pen, five);
 
             Rectangle six = new Rectangle(startX + e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
-            g.DrawString("   B   ", fontSmall, sb, six);
+            g.DrawString(" danger", fontSmall, sb, six);
             g.DrawRectangle(pen, six);
 
             Rectangle seven = new Rectangle(startX + e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
-            g.DrawString("   A   ", fontSmall, sb, seven);
+            g.DrawString(" normal", fontSmall, sb, seven);
             g.DrawRectangle(pen, seven);
 
             Rectangle eight = new Rectangle(startX + 3 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
-            g.DrawString("   B   ", fontSmall, sb, eight);
+            g.DrawString(" danger", fontSmall, sb, eight);
             g.DrawRectangle(pen, eight);
 
             Rectangle nine = new Rectangle(startX + e.MarginBounds.Width / 2, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
-            g.DrawString("   A   ", fontSmall, sb, nine);
+            g.DrawString(" normal", fontSmall, sb, nine);
             g.DrawRectangle(pen, nine);
 
             Rectangle ten = new Rectangle(startX + 5 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
-            g.DrawString("   B   ", fontSmall, sb, ten);
+            g.DrawString(" danger", fontSmall, sb, ten);
             g.DrawRectangle(pen, ten);
 
             Rectangle eleven = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
@@ -478,41 +434,79 @@ namespace Angel_Access
 
             g.DrawLine(pen, new Point(startX, offset + (int)fontSmallHeight), new Point(endX, offset + (int)fontSmallHeight));
             offset = offset + (int)fontHeight * 2;
-
             Rectangle twelve = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
             g.DrawString(" неопасно опасно", fontSmall, sb, twelve);
+            
+            offset = offset + (int)fontHeight * 2;
+            g.DrawString("expert"  , font, sb, startX, offset);
+            offset = offset + (int)fontHeight * 2;
 
-            if (choiceZ != null) 
-            {
-                DateTime thisDate = new DateTime();
-                string[] A = new string[3];
-                string[] B = new string[3];
-                angelData.printSelectedZamer(choiceZ[0], out thisDate, out A, out B);
-                g.DrawString(string.Format("Дата замера: {0:g}, прибор \"Ангел\" №___", thisDate), new Font("Courier New", 14, FontStyle.Bold), sb, startX, startY);
+            one = new Rectangle(startX, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Вдоль выработки", font, sb, one);
+            g.DrawRectangle(pen, one);
 
-                if (choiceZ.Count > 1)
-                {
-                    choiceZ.RemoveAt(0);
-                    e.HasMorePages = true;
-                }
-                else
-                    e.HasMorePages = false;
+            two = new Rectangle(startX + e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Поперек выработки", font, sb, two);
+            g.DrawRectangle(pen, two);
 
-                g.DrawString(" " + A[0], fontSmall, sb, new Rectangle(startX, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
-                g.DrawString(" " + B[0], fontSmall, sb, new Rectangle(startX + e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
-                g.DrawString(" " + A[1], fontSmall, sb, new Rectangle(startX + e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
-                g.DrawString(" " + B[1], fontSmall, sb, new Rectangle(startX + 3 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
-                g.DrawString(" " + A[2], fontSmall, sb, new Rectangle(startX + e.MarginBounds.Width / 2, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
-                g.DrawString(" " + B[2], fontSmall, sb, new Rectangle(startX + 5 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
-            }
+            three = new Rectangle(startX + e.MarginBounds.Width / 2, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Вертикально", font, sb, three);
+            g.DrawRectangle(pen, three);
+
+            four = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2);
+            g.DrawString("Категория удароопасности", fontSmall, sb, four);
+            g.DrawRectangle(pen, four);
 
             offset = offset + (int)fontHeight * 2;
 
-            Rectangle prime4anie = new Rectangle(startX, offset, e.MarginBounds.Width, (int)fontHeight * 15);
-            g.DrawString("Примечание (эскиз или др)", fontSmall, sb, prime4anie);
-            g.DrawRectangle(pen, prime4anie);
+            five = new Rectangle(startX, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString("   A   ", fontSmall, sb, five);
+            g.DrawRectangle(pen, five);
 
-            offset = offset + (int)fontHeight * 24;
+            six = new Rectangle(startX + e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString("   B   ", fontSmall, sb, six);
+            g.DrawRectangle(pen, six);
+
+            seven = new Rectangle(startX + e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString("   A   ", fontSmall, sb, seven);
+            g.DrawRectangle(pen, seven);
+
+            eight = new Rectangle(startX + 3 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString("   B   ", fontSmall, sb, eight);
+            g.DrawRectangle(pen, eight);
+
+            nine = new Rectangle(startX + e.MarginBounds.Width / 2, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString("   A   ", fontSmall, sb, nine);
+            g.DrawRectangle(pen, nine);
+
+            ten = new Rectangle(startX + 5 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 8, (int)fontHeight * 4);
+            g.DrawString("   B   ", fontSmall, sb, ten);
+            g.DrawRectangle(pen, ten);
+
+            eleven = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
+            g.DrawRectangle(pen, eleven);
+
+            g.DrawLine(pen, new Point(startX, offset + (int)fontSmallHeight), new Point(endX, offset + (int)fontSmallHeight));
+            offset = offset + (int)fontHeight * 2;
+
+            twelve = new Rectangle(startX + 3 * e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 4);
+            g.DrawString(" неопасно опасно", fontSmall, sb, twelve);
+
+            //g.DrawString(" " + str[0], fontSmall, sb, new Rectangle(startX, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
+            //g.DrawString(" " + str[1], fontSmall, sb, new Rectangle(startX + e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
+            //g.DrawString(" " + str[0], fontSmall, sb, new Rectangle(startX + e.MarginBounds.Width / 4, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
+            //g.DrawString(" " + str[1], fontSmall, sb, new Rectangle(startX + 3 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
+            //g.DrawString(" " + str[0], fontSmall, sb, new Rectangle(startX + e.MarginBounds.Width / 2, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
+            //g.DrawString(" " + str[1], fontSmall, sb, new Rectangle(startX + 5 * e.MarginBounds.Width / 8, offset, e.MarginBounds.Width / 4, (int)fontHeight * 2));
+
+
+            offset = offset + (int)fontHeight * 2;
+
+            one = new Rectangle(startX, offset, e.MarginBounds.Width, (int)fontHeight * 7);
+            g.DrawString("Примечание (эскиз или др)", fontSmall, sb, one);
+            g.DrawRectangle(pen, one);
+
+            offset = offset + (int)fontHeight * 8;
             
             g.DrawLine(pen, new Point(startX, offset), new Point(endX, offset));
             offset = offset + (int)fontHeight;
@@ -531,8 +525,11 @@ namespace Angel_Access
             pdi.Document = printDocument1;
             if (pdi.ShowDialog() == DialogResult.OK)
             {
-               printDocument1.Print();
-               MessageBox.Show("Отправлено на печать");
+                if (printPreviewDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    printDocument1.Print();
+                    MessageBox.Show("Отправлено на печать");
+                }
             }
             else
             {

@@ -11,17 +11,3 @@ H:\OLYA\mulev\Angel_Access\Angel_Access\bin\Debug\Angel_Access.exe.manifest
 H:\OLYA\mulev\Angel_Access\Angel_Access\bin\Debug\Angel_Access.application
 H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Debug\Angel_Access.exe.manifest
 H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Debug\Angel_Access.application
-D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\bin\Debug\Angel_Access.exe.config
-D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\obj\Debug\Angel_Access.exe
-D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\obj\Debug\Angel_Access.pdb
-D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\obj\Debug\Angel_Access.askPoroda.resources
-D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\obj\Debug\Angel_Access.Form1.resources
-D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\obj\Debug\Angel_Access.Properties.Resources.resources
-D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\obj\Debug\Angel_Access.csproj.GenerateResource.Cache
-D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\bin\Debug\Angel_Access.exe.manifest
-D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\bin\Debug\Angel_Access.application
-D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\bin\Debug\Angel_Access.exe
-D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\bin\Debug\Angel_Access.pdb
-D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\obj\Debug\Angel_Access.exe.manifest
-D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\obj\Debug\Angel_Access.application
-D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\obj\Debug\Angel_Access.csprojResolveAssemblyReference.cache

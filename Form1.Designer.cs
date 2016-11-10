@@ -36,7 +36,7 @@
             this.comboBoxRegion = new System.Windows.Forms.ComboBox();
             this.NumberOfVirabot = new System.Windows.Forms.Label();
             this.groupBoxRegion = new System.Windows.Forms.GroupBox();
-            this.btnAccessStart = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.buttonRegion = new System.Windows.Forms.Button();
             this.groupBoxFromFile = new System.Windows.Forms.GroupBox();
             this.listViewZameri = new System.Windows.Forms.ListView();
@@ -45,7 +45,6 @@
             this.groupBoxZamer = new System.Windows.Forms.GroupBox();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBoxVirabotka = new System.Windows.Forms.GroupBox();
-            this.labelDiametr = new System.Windows.Forms.Label();
             this.comboBoxPoroda = new System.Windows.Forms.ComboBox();
             this.labelPoroda = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -66,6 +65,7 @@
             this.dataGridViewZamer = new System.Windows.Forms.DataGridView();
             this.labelZamer = new System.Windows.Forms.Label();
             this.labelMissingBase = new System.Windows.Forms.Label();
+            this.printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog();
             this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             this.groupBoxRegion.SuspendLayout();
             this.groupBoxFromFile.SuspendLayout();
@@ -77,10 +77,9 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 92);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(6, 113);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(54, 13);
+            this.label1.Size = new System.Drawing.Size(70, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "Горизонт";
             // 
@@ -92,20 +91,18 @@
             // 
             this.comboBoxHorizont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxHorizont.FormattingEnabled = true;
-            this.comboBoxHorizont.Location = new System.Drawing.Point(58, 89);
-            this.comboBoxHorizont.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBoxHorizont.Location = new System.Drawing.Point(78, 110);
             this.comboBoxHorizont.MaxDropDownItems = 12;
             this.comboBoxHorizont.Name = "comboBoxHorizont";
-            this.comboBoxHorizont.Size = new System.Drawing.Size(135, 21);
+            this.comboBoxHorizont.Size = new System.Drawing.Size(179, 24);
             this.comboBoxHorizont.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 48);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Location = new System.Drawing.Point(6, 59);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(49, 13);
+            this.label2.Size = new System.Drawing.Size(62, 17);
             this.label2.TabIndex = 2;
             this.label2.Text = "Участок";
             // 
@@ -114,59 +111,53 @@
             this.comboBoxRegion.CausesValidation = false;
             this.comboBoxRegion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxRegion.FormattingEnabled = true;
-            this.comboBoxRegion.Location = new System.Drawing.Point(58, 48);
-            this.comboBoxRegion.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBoxRegion.Location = new System.Drawing.Point(78, 59);
             this.comboBoxRegion.Name = "comboBoxRegion";
-            this.comboBoxRegion.Size = new System.Drawing.Size(135, 21);
+            this.comboBoxRegion.Size = new System.Drawing.Size(179, 24);
             this.comboBoxRegion.TabIndex = 3;
             // 
             // NumberOfVirabot
             // 
             this.NumberOfVirabot.AutoSize = true;
-            this.NumberOfVirabot.Location = new System.Drawing.Point(4, 181);
-            this.NumberOfVirabot.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.NumberOfVirabot.MaximumSize = new System.Drawing.Size(202, 0);
+            this.NumberOfVirabot.Location = new System.Drawing.Point(6, 223);
+            this.NumberOfVirabot.MaximumSize = new System.Drawing.Size(270, 0);
             this.NumberOfVirabot.Name = "NumberOfVirabot";
-            this.NumberOfVirabot.Size = new System.Drawing.Size(109, 13);
+            this.NumberOfVirabot.Size = new System.Drawing.Size(141, 17);
             this.NumberOfVirabot.TabIndex = 11;
             this.NumberOfVirabot.Text = "Найдено выработок";
             // 
             // groupBoxRegion
             // 
-            this.groupBoxRegion.Controls.Add(this.btnAccessStart);
+            this.groupBoxRegion.Controls.Add(this.button2);
             this.groupBoxRegion.Controls.Add(this.buttonRegion);
             this.groupBoxRegion.Controls.Add(this.NumberOfVirabot);
             this.groupBoxRegion.Controls.Add(this.label2);
             this.groupBoxRegion.Controls.Add(this.comboBoxRegion);
             this.groupBoxRegion.Controls.Add(this.label1);
             this.groupBoxRegion.Controls.Add(this.comboBoxHorizont);
-            this.groupBoxRegion.Location = new System.Drawing.Point(16, 2);
-            this.groupBoxRegion.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBoxRegion.Location = new System.Drawing.Point(22, 2);
             this.groupBoxRegion.Name = "groupBoxRegion";
-            this.groupBoxRegion.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBoxRegion.Size = new System.Drawing.Size(210, 261);
+            this.groupBoxRegion.Size = new System.Drawing.Size(280, 321);
             this.groupBoxRegion.TabIndex = 12;
             this.groupBoxRegion.TabStop = false;
             this.groupBoxRegion.Text = "Выбор района";
             // 
-            // btnAccessStart
+            // button2
             // 
-            this.btnAccessStart.Location = new System.Drawing.Point(7, 215);
-            this.btnAccessStart.Margin = new System.Windows.Forms.Padding(2);
-            this.btnAccessStart.Name = "btnAccessStart";
-            this.btnAccessStart.Size = new System.Drawing.Size(186, 34);
-            this.btnAccessStart.TabIndex = 12;
-            this.btnAccessStart.Text = "Запустить форму ПЭЗ_И для добавления выработок";
-            this.btnAccessStart.UseVisualStyleBackColor = true;
-            this.btnAccessStart.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Location = new System.Drawing.Point(9, 265);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(248, 42);
+            this.button2.TabIndex = 12;
+            this.button2.Text = "Запустить форму ПЭЗ_И для добавления выработок";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // buttonRegion
             // 
             this.buttonRegion.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonRegion.Location = new System.Drawing.Point(7, 128);
-            this.buttonRegion.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonRegion.Location = new System.Drawing.Point(9, 158);
             this.buttonRegion.Name = "buttonRegion";
-            this.buttonRegion.Size = new System.Drawing.Size(188, 41);
+            this.buttonRegion.Size = new System.Drawing.Size(250, 50);
             this.buttonRegion.TabIndex = 4;
             this.buttonRegion.Text = "Показать выработки для этого района";
             this.buttonRegion.UseVisualStyleBackColor = false;
@@ -177,11 +168,9 @@
             this.groupBoxFromFile.Controls.Add(this.listViewZameri);
             this.groupBoxFromFile.Controls.Add(this.buttonUploadData);
             this.groupBoxFromFile.Controls.Add(this.labelUploaded);
-            this.groupBoxFromFile.Location = new System.Drawing.Point(16, 280);
-            this.groupBoxFromFile.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBoxFromFile.Location = new System.Drawing.Point(22, 345);
             this.groupBoxFromFile.Name = "groupBoxFromFile";
-            this.groupBoxFromFile.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBoxFromFile.Size = new System.Drawing.Size(210, 332);
+            this.groupBoxFromFile.Size = new System.Drawing.Size(280, 409);
             this.groupBoxFromFile.TabIndex = 15;
             this.groupBoxFromFile.TabStop = false;
             this.groupBoxFromFile.Text = "Загрузить данные Ангела";
@@ -190,10 +179,9 @@
             // 
             this.listViewZameri.FullRowSelect = true;
             this.listViewZameri.GridLines = true;
-            this.listViewZameri.Location = new System.Drawing.Point(7, 120);
-            this.listViewZameri.Margin = new System.Windows.Forms.Padding(2);
+            this.listViewZameri.Location = new System.Drawing.Point(9, 148);
             this.listViewZameri.Name = "listViewZameri";
-            this.listViewZameri.Size = new System.Drawing.Size(188, 174);
+            this.listViewZameri.Size = new System.Drawing.Size(250, 247);
             this.listViewZameri.TabIndex = 17;
             this.listViewZameri.UseCompatibleStateImageBehavior = false;
             this.listViewZameri.View = System.Windows.Forms.View.Details;
@@ -203,10 +191,9 @@
             // buttonUploadData
             // 
             this.buttonUploadData.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonUploadData.Location = new System.Drawing.Point(7, 24);
-            this.buttonUploadData.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonUploadData.Location = new System.Drawing.Point(9, 29);
             this.buttonUploadData.Name = "buttonUploadData";
-            this.buttonUploadData.Size = new System.Drawing.Size(188, 41);
+            this.buttonUploadData.Size = new System.Drawing.Size(250, 50);
             this.buttonUploadData.TabIndex = 3;
             this.buttonUploadData.Text = "Загрузить данные";
             this.buttonUploadData.UseVisualStyleBackColor = false;
@@ -215,11 +202,10 @@
             // labelUploaded
             // 
             this.labelUploaded.AutoSize = true;
-            this.labelUploaded.Location = new System.Drawing.Point(10, 67);
-            this.labelUploaded.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelUploaded.MaximumSize = new System.Drawing.Size(188, 0);
+            this.labelUploaded.Location = new System.Drawing.Point(14, 82);
+            this.labelUploaded.MaximumSize = new System.Drawing.Size(250, 0);
             this.labelUploaded.Name = "labelUploaded";
-            this.labelUploaded.Size = new System.Drawing.Size(0, 13);
+            this.labelUploaded.Size = new System.Drawing.Size(0, 17);
             this.labelUploaded.TabIndex = 2;
             // 
             // groupBoxZamer
@@ -230,21 +216,18 @@
             this.groupBoxZamer.Controls.Add(this.btnWriteToBase);
             this.groupBoxZamer.Controls.Add(this.dataGridViewZamer);
             this.groupBoxZamer.Controls.Add(this.labelZamer);
-            this.groupBoxZamer.Location = new System.Drawing.Point(244, 5);
-            this.groupBoxZamer.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBoxZamer.Location = new System.Drawing.Point(325, 6);
             this.groupBoxZamer.Name = "groupBoxZamer";
-            this.groupBoxZamer.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBoxZamer.Size = new System.Drawing.Size(518, 608);
+            this.groupBoxZamer.Size = new System.Drawing.Size(691, 748);
             this.groupBoxZamer.TabIndex = 16;
             this.groupBoxZamer.TabStop = false;
             this.groupBoxZamer.Text = "Привязка измерений по месту";
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(286, 516);
-            this.button3.Margin = new System.Windows.Forms.Padding(2);
+            this.button3.Location = new System.Drawing.Point(380, 659);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(176, 40);
+            this.button3.Size = new System.Drawing.Size(235, 49);
             this.button3.TabIndex = 12;
             this.button3.Text = "button3";
             this.button3.UseVisualStyleBackColor = true;
@@ -252,7 +235,6 @@
             // 
             // groupBoxVirabotka
             // 
-            this.groupBoxVirabotka.Controls.Add(this.labelDiametr);
             this.groupBoxVirabotka.Controls.Add(this.comboBoxPoroda);
             this.groupBoxVirabotka.Controls.Add(this.labelPoroda);
             this.groupBoxVirabotka.Controls.Add(this.label9);
@@ -269,78 +251,60 @@
             this.groupBoxVirabotka.Controls.Add(this.label4);
             this.groupBoxVirabotka.Controls.Add(this.label5);
             this.groupBoxVirabotka.Controls.Add(this.label7);
-            this.groupBoxVirabotka.Location = new System.Drawing.Point(5, 18);
-            this.groupBoxVirabotka.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBoxVirabotka.Location = new System.Drawing.Point(7, 22);
             this.groupBoxVirabotka.Name = "groupBoxVirabotka";
-            this.groupBoxVirabotka.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBoxVirabotka.Size = new System.Drawing.Size(505, 194);
+            this.groupBoxVirabotka.Size = new System.Drawing.Size(673, 239);
             this.groupBoxVirabotka.TabIndex = 11;
             this.groupBoxVirabotka.TabStop = false;
-            // 
-            // labelDiametr
-            // 
-            this.labelDiametr.AutoSize = true;
-            this.labelDiametr.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelDiametr.Location = new System.Drawing.Point(485, 41);
-            this.labelDiametr.Name = "labelDiametr";
-            this.labelDiametr.Size = new System.Drawing.Size(15, 13);
-            this.labelDiametr.TabIndex = 22;
-            this.labelDiametr.Text = "D";
             // 
             // comboBoxPoroda
             // 
             this.comboBoxPoroda.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPoroda.FormattingEnabled = true;
-            this.comboBoxPoroda.Location = new System.Drawing.Point(363, 154);
-            this.comboBoxPoroda.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBoxPoroda.Location = new System.Drawing.Point(484, 189);
             this.comboBoxPoroda.Name = "comboBoxPoroda";
-            this.comboBoxPoroda.Size = new System.Drawing.Size(122, 21);
+            this.comboBoxPoroda.Size = new System.Drawing.Size(162, 24);
             this.comboBoxPoroda.TabIndex = 21;
             // 
             // labelPoroda
             // 
             this.labelPoroda.AutoSize = true;
-            this.labelPoroda.Location = new System.Drawing.Point(303, 158);
-            this.labelPoroda.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelPoroda.Location = new System.Drawing.Point(404, 194);
             this.labelPoroda.Name = "labelPoroda";
-            this.labelPoroda.Size = new System.Drawing.Size(45, 13);
+            this.labelPoroda.Size = new System.Drawing.Size(58, 17);
             this.labelPoroda.TabIndex = 20;
             this.labelPoroda.Text = "Порода";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(10, 15);
-            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label9.Location = new System.Drawing.Point(13, 18);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(172, 13);
+            this.label9.Size = new System.Drawing.Size(224, 17);
             this.label9.TabIndex = 19;
             this.label9.Text = "Выбранные горизонт и участок: ";
             // 
             // labelReg
             // 
             this.labelReg.AutoSize = true;
-            this.labelReg.Location = new System.Drawing.Point(278, 15);
-            this.labelReg.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelReg.Location = new System.Drawing.Point(370, 18);
             this.labelReg.Name = "labelReg";
-            this.labelReg.Size = new System.Drawing.Size(0, 13);
+            this.labelReg.Size = new System.Drawing.Size(0, 17);
             this.labelReg.TabIndex = 18;
             // 
             // labelHor
             // 
             this.labelHor.AutoSize = true;
-            this.labelHor.Location = new System.Drawing.Point(188, 15);
-            this.labelHor.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelHor.Location = new System.Drawing.Point(250, 18);
             this.labelHor.Name = "labelHor";
-            this.labelHor.Size = new System.Drawing.Size(0, 13);
+            this.labelHor.Size = new System.Drawing.Size(0, 17);
             this.labelHor.TabIndex = 17;
             // 
             // textBoxPriviazka
             // 
-            this.textBoxPriviazka.Location = new System.Drawing.Point(164, 124);
-            this.textBoxPriviazka.Margin = new System.Windows.Forms.Padding(2);
+            this.textBoxPriviazka.Location = new System.Drawing.Point(219, 152);
             this.textBoxPriviazka.Name = "textBoxPriviazka";
-            this.textBoxPriviazka.Size = new System.Drawing.Size(304, 20);
+            this.textBoxPriviazka.Size = new System.Drawing.Size(404, 22);
             this.textBoxPriviazka.TabIndex = 14;
             this.textBoxPriviazka.Validating += new System.ComponentModel.CancelEventHandler(this.textBoxPriviazka_Validating);
             // 
@@ -348,10 +312,9 @@
             // 
             this.comboBoxPriviazka.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPriviazka.FormattingEnabled = true;
-            this.comboBoxPriviazka.Location = new System.Drawing.Point(188, 124);
-            this.comboBoxPriviazka.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBoxPriviazka.Location = new System.Drawing.Point(250, 152);
             this.comboBoxPriviazka.Name = "comboBoxPriviazka";
-            this.comboBoxPriviazka.Size = new System.Drawing.Size(298, 21);
+            this.comboBoxPriviazka.Size = new System.Drawing.Size(396, 24);
             this.comboBoxPriviazka.TabIndex = 11;
             this.comboBoxPriviazka.SelectedIndexChanged += new System.EventHandler(this.comboBoxPriviazka_SelectedIndexChanged);
             // 
@@ -359,19 +322,17 @@
             // 
             this.comboBoxNapravlenie.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxNapravlenie.FormattingEnabled = true;
-            this.comboBoxNapravlenie.Location = new System.Drawing.Point(164, 155);
-            this.comboBoxNapravlenie.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBoxNapravlenie.Location = new System.Drawing.Point(219, 191);
             this.comboBoxNapravlenie.Name = "comboBoxNapravlenie";
-            this.comboBoxNapravlenie.Size = new System.Drawing.Size(122, 21);
+            this.comboBoxNapravlenie.Size = new System.Drawing.Size(162, 24);
             this.comboBoxNapravlenie.TabIndex = 13;
             // 
             // labelNapravlenie
             // 
             this.labelNapravlenie.AutoSize = true;
-            this.labelNapravlenie.Location = new System.Drawing.Point(10, 158);
-            this.labelNapravlenie.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelNapravlenie.Location = new System.Drawing.Point(13, 194);
             this.labelNapravlenie.Name = "labelNapravlenie";
-            this.labelNapravlenie.Size = new System.Drawing.Size(75, 13);
+            this.labelNapravlenie.Size = new System.Drawing.Size(97, 17);
             this.labelNapravlenie.TabIndex = 12;
             this.labelNapravlenie.Text = "Направление";
             // 
@@ -379,80 +340,72 @@
             // 
             this.comboBoxVirabotka.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxVirabotka.FormattingEnabled = true;
-            this.comboBoxVirabotka.Location = new System.Drawing.Point(164, 37);
-            this.comboBoxVirabotka.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBoxVirabotka.Location = new System.Drawing.Point(219, 45);
             this.comboBoxVirabotka.Name = "comboBoxVirabotka";
-            this.comboBoxVirabotka.Size = new System.Drawing.Size(321, 21);
+            this.comboBoxVirabotka.Size = new System.Drawing.Size(427, 24);
             this.comboBoxVirabotka.TabIndex = 5;
             // 
             // comboBoxBlock
             // 
             this.comboBoxBlock.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxBlock.FormattingEnabled = true;
-            this.comboBoxBlock.Location = new System.Drawing.Point(164, 61);
-            this.comboBoxBlock.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBoxBlock.Location = new System.Drawing.Point(219, 75);
             this.comboBoxBlock.Name = "comboBoxBlock";
-            this.comboBoxBlock.Size = new System.Drawing.Size(321, 21);
+            this.comboBoxBlock.Size = new System.Drawing.Size(427, 24);
             this.comboBoxBlock.TabIndex = 4;
             // 
             // comboBoxPodetag
             // 
             this.comboBoxPodetag.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPodetag.FormattingEnabled = true;
-            this.comboBoxPodetag.Location = new System.Drawing.Point(164, 82);
-            this.comboBoxPodetag.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBoxPodetag.Location = new System.Drawing.Point(219, 101);
             this.comboBoxPodetag.Name = "comboBoxPodetag";
-            this.comboBoxPodetag.Size = new System.Drawing.Size(321, 21);
+            this.comboBoxPodetag.Size = new System.Drawing.Size(427, 24);
             this.comboBoxPodetag.TabIndex = 6;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 63);
-            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label3.Location = new System.Drawing.Point(13, 78);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(32, 13);
+            this.label3.Size = new System.Drawing.Size(40, 17);
             this.label3.TabIndex = 8;
             this.label3.Text = "Блок";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 88);
-            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Location = new System.Drawing.Point(13, 108);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(52, 13);
+            this.label4.Size = new System.Drawing.Size(65, 17);
             this.label4.TabIndex = 9;
             this.label4.Text = "Подэтаж";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(10, 39);
-            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label5.Location = new System.Drawing.Point(13, 48);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(63, 13);
+            this.label5.Size = new System.Drawing.Size(81, 17);
             this.label5.TabIndex = 10;
             this.label5.Text = "Выработка";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 125);
-            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label7.MaximumSize = new System.Drawing.Size(150, 0);
+            this.label7.Location = new System.Drawing.Point(13, 154);
+            this.label7.MaximumSize = new System.Drawing.Size(200, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(127, 26);
+            this.label7.Size = new System.Drawing.Size(200, 34);
             this.label7.TabIndex = 2;
             this.label7.Text = "Привязка замеров: (введите или выберите)";
             // 
             // btnWriteToBase
             // 
             this.btnWriteToBase.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.btnWriteToBase.Location = new System.Drawing.Point(11, 515);
-            this.btnWriteToBase.Margin = new System.Windows.Forms.Padding(2);
+            this.btnWriteToBase.Location = new System.Drawing.Point(15, 658);
             this.btnWriteToBase.Name = "btnWriteToBase";
-            this.btnWriteToBase.Size = new System.Drawing.Size(188, 41);
+            this.btnWriteToBase.Size = new System.Drawing.Size(250, 50);
             this.btnWriteToBase.TabIndex = 6;
             this.btnWriteToBase.Text = "Записать в базу и распечатать?";
             this.btnWriteToBase.UseVisualStyleBackColor = false;
@@ -464,34 +417,42 @@
             this.dataGridViewZamer.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridViewZamer.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
             this.dataGridViewZamer.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewZamer.Location = new System.Drawing.Point(11, 280);
-            this.dataGridViewZamer.Margin = new System.Windows.Forms.Padding(2);
+            this.dataGridViewZamer.Location = new System.Drawing.Point(15, 345);
             this.dataGridViewZamer.Name = "dataGridViewZamer";
             this.dataGridViewZamer.RowHeadersVisible = false;
             this.dataGridViewZamer.RowTemplate.Height = 24;
-            this.dataGridViewZamer.Size = new System.Drawing.Size(492, 231);
+            this.dataGridViewZamer.Size = new System.Drawing.Size(656, 307);
             this.dataGridViewZamer.TabIndex = 5;
             // 
             // labelZamer
             // 
             this.labelZamer.AutoSize = true;
-            this.labelZamer.Location = new System.Drawing.Point(15, 228);
-            this.labelZamer.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelZamer.MaximumSize = new System.Drawing.Size(450, 0);
+            this.labelZamer.Location = new System.Drawing.Point(20, 280);
+            this.labelZamer.MaximumSize = new System.Drawing.Size(600, 0);
             this.labelZamer.Name = "labelZamer";
-            this.labelZamer.Size = new System.Drawing.Size(353, 13);
+            this.labelZamer.Size = new System.Drawing.Size(455, 17);
             this.labelZamer.TabIndex = 4;
             this.labelZamer.Text = "Выбранные замеры (выберите в списке слева один или несколько)";
             // 
             // labelMissingBase
             // 
             this.labelMissingBase.AutoSize = true;
-            this.labelMissingBase.Location = new System.Drawing.Point(255, 24);
-            this.labelMissingBase.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelMissingBase.MaximumSize = new System.Drawing.Size(300, 0);
+            this.labelMissingBase.Location = new System.Drawing.Point(340, 30);
+            this.labelMissingBase.MaximumSize = new System.Drawing.Size(400, 0);
             this.labelMissingBase.Name = "labelMissingBase";
-            this.labelMissingBase.Size = new System.Drawing.Size(0, 13);
+            this.labelMissingBase.Size = new System.Drawing.Size(0, 17);
             this.labelMissingBase.TabIndex = 17;
+            // 
+            // printPreviewDialog1
+            // 
+            this.printPreviewDialog1.AutoScrollMargin = new System.Drawing.Size(0, 0);
+            this.printPreviewDialog1.AutoScrollMinSize = new System.Drawing.Size(0, 0);
+            this.printPreviewDialog1.ClientSize = new System.Drawing.Size(400, 300);
+            this.printPreviewDialog1.Document = this.printDocument1;
+            this.printPreviewDialog1.Enabled = true;
+            this.printPreviewDialog1.Icon = ((System.Drawing.Icon)(resources.GetObject("printPreviewDialog1.Icon")));
+            this.printPreviewDialog1.Name = "printPreviewDialog1";
+            this.printPreviewDialog1.Visible = false;
             // 
             // printDocument1
             // 
@@ -499,16 +460,15 @@
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(763, 566);
+            this.ClientSize = new System.Drawing.Size(1017, 744);
             this.Controls.Add(this.labelMissingBase);
             this.Controls.Add(this.groupBoxZamer);
             this.Controls.Add(this.groupBoxFromFile);
             this.Controls.Add(this.groupBoxRegion);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Запись данных прибора Ангел";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -545,7 +505,7 @@
         private System.Windows.Forms.DataGridView dataGridViewZamer;
         private System.Windows.Forms.Label labelZamer;
         private System.Windows.Forms.Label labelMissingBase;
-        private System.Windows.Forms.Button btnAccessStart;
+        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.GroupBox groupBoxVirabotka;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label labelReg;
@@ -561,11 +521,11 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.PrintPreviewDialog printPreviewDialog1;
         private System.Drawing.Printing.PrintDocument printDocument1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.ComboBox comboBoxPoroda;
         private System.Windows.Forms.Label labelPoroda;
-        private System.Windows.Forms.Label labelDiametr;
     }
 }
 

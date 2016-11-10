@@ -59,37 +59,37 @@ namespace Angel_Access
             L9 = source[19];
             L10 = source[20];
         }
-        // проверяем разделитель  - он в данных всюду запятая!
-        public float Afloat() { return Convert.ToSingle(A, new System.Globalization.CultureInfo("nl-NL")); }
-        public float Bfloat() { return Convert.ToSingle(B, new System.Globalization.CultureInfo("nl-NL")); }
-
+       // public int nomerZamera; // { get; set; }
     }
 
   
 
     class AngelDataList 
     {
-        class Zamer  {public List<AngelData> odinZamer = new List<AngelData>(); }
+        class Zamer  
+        {public List<AngelData> odinZamer = new List<AngelData>();
+        }
         List <AngelData> adl = new List<AngelData>();
         List<Zamer> zamerList = new List<Zamer>();
         public List <ListViewItem> lvi_list = new List<ListViewItem>();
-       
-        
-        public void printSelectedZamer(int i, out DateTime dt, out string[]A, out string []B)
+        public void printSelectedZamer(int i, out DateTime dt, out float[]A, out float []B)
         {
             dt = zamerList[i].odinZamer[0].Dt;
             int number = zamerList[i].odinZamer.Count;
-
-            A = new string[number];
-            B = new string[number];
+            A = new float[number];
+            B = new float[number];
             int j = 0;
-          
- 
+            // проверяем разделитель 
+            //IFormatProvider IFP = 
+            //char.IsLetter (zamerList[i].odinZamer[0].A,)
+
             foreach (AngelData ad in zamerList[i].odinZamer) 
             {
-                 A[j] = ad.A;
-                 B[j] = ad.B;
-                 j = j + 1;
+    //            A[j] = Convert.ToSingle(ad.A, System.Globalization.CultureInfo.);
+     //           A[j] = Convert.ToSingle(ad.A, System.Globalization.CultureInfo.);
+                   
+                B[j] = Single.Parse(ad.B);
+                j = j + 1;
             }
         
         }
@@ -160,7 +160,8 @@ namespace Angel_Access
             string[] stringSeparators = new string[] { " ", "\t" };
             string[] angelString = line.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
 
-            // проверяем что там цифра и структура нужной длины - в конце могут быть комменты..
+        // проверяем что там цифра и структура нужной длины - в конце могут быть комменты..
+
             if (Char.IsDigit(angelString[0], 0) && angelString.Length >= 21) // Regex.IsMatch можно бы пробовать
             { 
                 AngelData ad = new AngelData();
