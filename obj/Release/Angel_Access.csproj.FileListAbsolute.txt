@@ -12,3 +12,6 @@ H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Release\Angel_Access.exe.manifest
 H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Release\Angel_Access.application
 H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Release\Angel_Access.exe
 H:\OLYA\mulev\Angel_Access\Angel_Access\obj\Release\Angel_Access.pdb
+D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\bin\Release\Angel_Access.exe.config
+D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\obj\Release\Angel_Access.exe
+D:\OLYA\mulev\Angel_Access\Angel_Access\Angel_Access\obj\Release\Angel_Access.pdb

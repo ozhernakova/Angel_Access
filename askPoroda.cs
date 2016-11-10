@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Angel_Access
@@ -19,20 +14,12 @@ namespace Angel_Access
             comboBox1.DataSource = dtd.porodi;
             comboBox1.DisplayMember = "Порода";
             this.dtd = dtd;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-
-            
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+         private void buttonOK_Click(object sender, EventArgs e)
         {
-            
+            dtd.idPoroda = (int)dtd.porodi.Select("[Порода] = '" + comboBox1.Text + "'")[0][0]; 
         }
-
-        private void buttonOK_Click(object sender, EventArgs e)
-        {
-            dtd.setidPoroda(comboBox1.Text);
-            dtd.Poroda = comboBox1.Text;
         }
     }
-}
+
