@@ -89,6 +89,7 @@
     <Compile Include="askPoroda.Designer.cs">
       <DependentUpon>askPoroda.cs</DependentUpon>
     </Compile>
+    <Compile Include="CultureSet.cs" />
     <Compile Include="DataToDisplay.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

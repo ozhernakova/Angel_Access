@@ -79,9 +79,15 @@ namespace Angel_Access
             A = new float[number];
             B = new float[number];
             int j = 0;
+            // проверяем разделитель 
+            //IFormatProvider IFP = 
+            //char.IsLetter (zamerList[i].odinZamer[0].A,)
+
             foreach (AngelData ad in zamerList[i].odinZamer) 
             {
-                A[j] = Single.Parse(ad.A);
+    //            A[j] = Convert.ToSingle(ad.A, System.Globalization.CultureInfo.);
+     //           A[j] = Convert.ToSingle(ad.A, System.Globalization.CultureInfo.);
+                   
                 B[j] = Single.Parse(ad.B);
                 j = j + 1;
             }
@@ -154,13 +160,13 @@ namespace Angel_Access
             string[] stringSeparators = new string[] { " ", "\t" };
             string[] angelString = line.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
 
-        // проверяем что там цифры и структура нужной длины
-            int x;
-            if (Int32.TryParse(angelString[0], out x) && angelString.Length == 21) 
+        // проверяем что там цифра и структура нужной длины - в конце могут быть комменты..
+
+            if (Char.IsDigit(angelString[0], 0) && angelString.Length >= 21) // Regex.IsMatch можно бы пробовать
             { 
                 AngelData ad = new AngelData();
                 ad.setAllFromString(angelString);
-                
+              
                 adl.Add(ad);
             }
 
